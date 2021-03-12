@@ -1,0 +1,18 @@
+{
+    "description": "Glossary for Neos",
+    "type": "neos-package",
+    "name": "sitegeist/nomenclator",
+    "require": {
+        "neos/flow": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Sitegeist\\Nomenclator\\": "Classes/"
+        }
+    },
+    "extra": {
+        "neos": {
+            "package-key": "Sitegeist.Nomenclator"
+        }
+    }
+}
