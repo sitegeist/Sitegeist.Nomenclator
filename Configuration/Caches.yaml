@@ -1,0 +1,2 @@
+Glossary_Index_Cache:
+  frontend: 'Neos\Cache\Frontend\VariableFrontend'
