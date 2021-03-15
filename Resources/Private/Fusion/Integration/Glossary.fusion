@@ -1,0 +1,31 @@
+prototype(Sitegeist.Nomenclator:Glossary) < prototype(Neos.Neos:ContentComponent) {
+    entries = Neos.Fusion:Map {
+        items = ${q(node).children('[instanceof Sitegeist.Nomenclator:Glossary.Entry]').get()}
+        itemName = 'entryItem'
+        itemRenderer = Neos.Fusion:DataStructure {
+            __node = ${entryItem}
+            testProp = ${q(entryItem).property('imageAlternativeText')}
+            title = Neos.Neos:Editable {
+                node = ${entryItem}
+                property = 'title'
+                block = false
+            }
+            description = Neos.Neos:Editable {
+                node = ${entryItem}
+                property = 'description'
+                block = false
+            }
+        }
+    }
+
+    renderer = Sitegeist.Nomenclator:Presentation.Glossary {
+        entries = ${props.entries}
+    }
+    prototype(Sitegeist.Nomenclator:Presentation.Glossary.Entry) {
+        @process.contentElementWrapping = Neos.Neos:ContentElementWrapping {
+            @if.hasNode = ${item.__node}
+            @if.inBackend = ${documentNode.context.inBackend}
+            node = ${item.__node}
+        }
+    }
+}

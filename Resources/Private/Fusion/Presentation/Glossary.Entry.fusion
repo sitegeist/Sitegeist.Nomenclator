@@ -1,0 +1,10 @@
+prototype(Sitegeist.Nomenclator:Presentation.Glossary.Entry) < prototype(Neos.Fusion:Component) {
+    title = ""
+    description = ""
+    renderer = afx`
+        <div>
+            <h2>{props.title}</h2>
+            <p>{props.description}</p>
+        </div>
+    `
+}

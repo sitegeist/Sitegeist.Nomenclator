@@ -1,0 +1,12 @@
+prototype(Sitegeist.Nomenclator:Presentation.Glossary) < prototype(Neos.Fusion:Component) {
+    renderer= afx`
+        <div class="glossary">
+            <div>Glossar:</div>
+            <Neos.Fusion:Loop items={props.entries} itemName="item" @children="itemRenderer">
+                <Sitegeist.Nomenclator:Presentation.Glossary.Entry
+                    {...item}
+                />
+            </Neos.Fusion:Loop>
+        </div>
+    `
+}
