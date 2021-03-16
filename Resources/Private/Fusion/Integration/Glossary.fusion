@@ -1,10 +1,15 @@
 prototype(Sitegeist.Nomenclator:Glossary) < prototype(Neos.Neos:ContentComponent) {
+    headline = Neos.Neos:Editable {
+        node = ${entryItem}
+        property = 'headline'
+        block = false
+    }
+
     entries = Neos.Fusion:Map {
         items = ${q(node).children('[instanceof Sitegeist.Nomenclator:Glossary.Entry]').get()}
         itemName = 'entryItem'
         itemRenderer = Neos.Fusion:DataStructure {
             __node = ${entryItem}
-            testProp = ${q(entryItem).property('imageAlternativeText')}
             title = Neos.Neos:Editable {
                 node = ${entryItem}
                 property = 'title'
@@ -15,10 +20,23 @@ prototype(Sitegeist.Nomenclator:Glossary) < prototype(Neos.Neos:ContentComponent
                 property = 'description'
                 block = false
             }
+            variants = Neos.Neos:Editable {
+                @if.inBackend = ${node.context.inBackend}
+                node = ${entryItem}
+                property = 'variants'
+                block = false
+            }
+            imageSource = Neos.Neos:ImageUri {
+                asset = ${q(entryItem).property('image')}
+            }
+            imageAlt = ${q(entryItem).property('imageAlternativeText')}
+            imageTitle = ${q(entryItem).property('imageTitle')}
+
         }
     }
 
     renderer = Sitegeist.Nomenclator:Presentation.Glossary {
+        headline = ${props.headline}
         entries = ${props.entries}
     }
     prototype(Sitegeist.Nomenclator:Presentation.Glossary.Entry) {

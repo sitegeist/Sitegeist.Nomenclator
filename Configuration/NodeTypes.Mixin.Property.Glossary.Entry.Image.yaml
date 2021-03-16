@@ -1,0 +1,40 @@
+'NodeTypes.Mixin.Property.Glossary.Entry.Image':
+  abstract: true
+  ui:
+    inspector:
+      groups:
+        image:
+          label: Image
+          icon: icon-image
+  properties:
+    image:
+      type: Neos\Media\Domain\Model\ImageInterface
+      ui:
+        label: 'Image'
+        reloadIfChanged: true
+        inspector:
+          group: 'image'
+          position: 50
+          editor: 'Neos.Neos/Inspector/Editors/ImageEditor'
+          editorOptions:
+            features:
+              crop: true
+
+    imageAlternativeText:
+      type: string
+      ui:
+        label: Image Alt Text
+        reloadIfChanged: true
+        inspector:
+          group: 'image'
+          position: 100
+
+    imageTitle:
+      type: string
+      ui:
+        label: Image Title Text
+        reloadIfChanged: true
+        inspector:
+          group: 'image'
+          position: 150
+

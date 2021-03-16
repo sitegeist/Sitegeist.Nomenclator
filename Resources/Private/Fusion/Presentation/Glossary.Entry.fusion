@@ -1,10 +1,19 @@
 prototype(Sitegeist.Nomenclator:Presentation.Glossary.Entry) < prototype(Neos.Fusion:Component) {
     title = ""
     description = ""
+    variants = ""
     renderer = afx`
-        <div>
-            <h2>{props.title}</h2>
-            <p>{props.description}</p>
-        </div>
+        <dt style="margin-top:40px;font-weight: 600">
+            <dfn>
+                {props.title}
+            </dfn>
+        </dt>
+        <dd style="margin:20px;">
+            {props.description}
+            <img src={props.imageSource}/>
+        </dd>
+        <dd @if.isBackend={props.variants}>
+            {props.variants}
+        </dd>
     `
 }

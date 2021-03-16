@@ -9,3 +9,13 @@
   ui:
     label: 'Glossary'
     icon: list
+
+  properties:
+    headline:
+      ui:
+        type: string
+        inlineEditable: true
+        inline:
+          editorOptions:
+            placeholder: 'Headline'
+            autoparagraph: false
