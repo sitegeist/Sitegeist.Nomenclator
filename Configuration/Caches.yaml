@@ -1,2 +1,4 @@
 Glossary_Index_Cache:
   frontend: 'Neos\Cache\Frontend\VariableFrontend'
+  backend: 'Neos\Cache\Backend\SimpleFileBackend'
+

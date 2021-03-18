@@ -2,12 +2,13 @@
 namespace Sitegeist\Nomenclator;
 
 use Neos\ContentRepository\Domain\Service\PublishingService;
+use Neos\ContentRepository\Domain\Model\Workspace;
 use Neos\Flow\Core\Bootstrap;
 use Neos\Flow\Package as BasePackage;
 use Sitegeist\Nomenclator\Domain\Glossary;
 
 /**
- * The Sitegeist.Bitzer.Review
+ * The Sitegeist.Nomenclator
  */
 class Package extends BasePackage
 {
@@ -19,11 +20,17 @@ class Package extends BasePackage
     {
         $dispatcher = $bootstrap->getSignalSlotDispatcher();
 
-        $dispatcher->connect(
+        /*$dispatcher->connect(
             PublishingService::class,
             'nodePublished',
             Glossary::class,
             'whenGlossaryPublished'
+        );*/
+        $dispatcher->connect(
+            Workspace::class,
+            'beforeNodePublishing',
+            Glossary::class,
+            'beforeGlossaryPublished'
         );
     }
 }
