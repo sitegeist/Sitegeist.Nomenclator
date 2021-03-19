@@ -2,10 +2,10 @@
   superTypes:
     'Neos.Neos:Content': true
     'NodeTypes.Mixin.Property.Glossary.Entry.Image': true
+
   constraints:
-    constraints:
-      nodeTypes:
-        '*': false
+    nodeTypes:
+      '*': false
   ui:
     label: 'Glossary Entry'
     icon: minus
