@@ -16,6 +16,12 @@ class Glossary
     protected $glossaryIndexCache;
 
     /**
+     * @Flow\InjectConfiguration(path="glossary")
+     * @var array
+     */
+    protected $settings;
+
+    /**
      * @var string
      */
     private $cacheIdentifier = "testGlossaryCache";
@@ -62,7 +68,8 @@ class Glossary
         }
 
         $glossaryIndex=[];
-        $termSeparator = ',';
+
+        $termSeparator = $this->settings['separator'];
 
         if ($glossaryNode) {
             $terms = $nodeIdentifiers = $termsIndex = $duplicates =[];

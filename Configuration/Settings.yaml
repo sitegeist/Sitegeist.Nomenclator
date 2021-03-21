@@ -3,3 +3,9 @@ Neos:
     fusion:
       autoInclude:
         Sitegeist.Nomenclator: true
+
+
+Sitegeist:
+  Nomenclator:
+      glossary:
+        separator: ','
