@@ -2,13 +2,14 @@ prototype(Sitegeist.Nomenclator:Presentation.Glossary.Entry) < prototype(Neos.Fu
     title = ""
     description = ""
     variants = ""
+
     renderer = afx`
-        <dt style="margin-top:40px;font-weight: 600">
+        <dt style={"margin-top:40px;font-weight: 600;" + props.duplicate}>
             <dfn>
                 {props.title}
             </dfn>
         </dt>
-        <dd style="margin:20px;">
+        <dd style='margin:20px;'>
             {props.description}
             <img src={props.imageSource}/>
         </dd>

@@ -13,6 +13,9 @@ use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Cli\CommandController;
 use Neos\Neos\Domain\Repository\SiteRepository;
 use Neos\Neos\Domain\Service\ContentContextFactory;
+use Neos\Neos\Ui\Domain\Model\Feedback\Operations\ReloadContentOutOfBand;
+use Neos\Neos\Ui\Domain\Model\FeedbackCollection;
+use Neos\Neos\Ui\Domain\Model\RenderedNodeDomAddress;
 
 /**
  * Product URI command controller
@@ -57,6 +60,12 @@ class TryCommandController extends CommandController
      */
     private $termSeparator = ',';
 
+    /**
+     * @Flow\Inject
+     * @var FeedbackCollection
+     */
+    protected $feedbackCollection;
+
     public function testCommand(): void
     {
         $site = $this->siteRepository->findOneByNodeName('customer-site');
@@ -67,28 +76,51 @@ class TryCommandController extends CommandController
             'currentSite' => $site,
             'currentDomain' => $site->getFirstActiveDomain(),
         ]);
-        $entryNodes = [];
-        $duplicatedTxt = [];
+
         $glossaryNode = $contentContext->getNodeByIdentifier('592237fc-5532-4696-9e87-804daa7e40ee');
         $glossaryNode = $glossaryNode->findParentNode();
-        if ($glossaryNode) {
-            $terms = $identifiers = $duplicates =[];
-        } else{
-            $txt = "didn't find the node";
-        }
 
-        file_put_contents('./Web/debug.txt', "----------------------------------------".PHP_EOL , FILE_APPEND | LOCK_EX);
+
+
+
+        /*foreach($terms as $key => $value ) {
+            file_put_contents('./Web/debug.txt', $key.PHP_EOL , FILE_APPEND | LOCK_EX);
+            file_put_contents('./Web/debug.txt', json_encode($value).PHP_EOL , FILE_APPEND | LOCK_EX);
+
+            file_put_contents('./Web/debug.txt', "-----------------".PHP_EOL , FILE_APPEND | LOCK_EX);
+        }*/
+
+
+        /*file_put_contents('./Web/debug.txt', "----------------------------------------".PHP_EOL , FILE_APPEND | LOCK_EX);
         file_put_contents('./Web/debug.txt', "terms:".PHP_EOL , FILE_APPEND | LOCK_EX);
         file_put_contents('./Web/debug.txt', "----------------------------------------".PHP_EOL , FILE_APPEND | LOCK_EX);
-        file_put_contents('./Web/debug.txt', "----------------------------------------".PHP_EOL , FILE_APPEND | LOCK_EX);
+        file_put_contents('./Web/debug.txt', "----------------------------------------".PHP_EOL , FILE_APPEND | LOCK_EX);*/
     }
 
     public function test2Command(): void
     {
-        file_put_contents('./Web/debug.txt', "----------------------------------------".PHP_EOL , FILE_APPEND | LOCK_EX);
-        $string = '1, 2, ,3,';
-        $string = array_filter(explode(',',$string), function($value) { return $value !== ' ' && $value !== ''; });
-        file_put_contents('./Web/debug.txt', json_encode($string).PHP_EOL , FILE_APPEND | LOCK_EX);
-        file_put_contents('./Web/debug.txt', "----------------------------------------".PHP_EOL , FILE_APPEND | LOCK_EX);
+
+        $a = array('key1', 'key2', 'key3','key4', 'key5');
+        $b = array('111', '222', '333', '333', '444');
+
+        $c = array('111'=>'title1', '222'=>'title2', '333'=>'title3', '444'=> 'title4');
+
+        $counts = array_count_values($a);
+
+        //file_put_contents('./Web/debug.txt', json_encode($counts).PHP_EOL , FILE_APPEND | LOCK_EX);
+        $duplicates=[];
+        foreach ($a as $key => $value) {
+            if ($counts[$value] > 1) {
+                $duplicates[]= $c[$b[$key]];
+                //file_put_contents('./Web/debug.txt', $key.PHP_EOL , FILE_APPEND | LOCK_EX);
+            }
+        }
+
+        file_put_contents('./Web/debug.txt', json_encode(array_values(array_unique($duplicates))).PHP_EOL , FILE_APPEND | LOCK_EX);
+
+
+
+
+
     }
 }

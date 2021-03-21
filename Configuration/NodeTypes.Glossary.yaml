@@ -2,6 +2,7 @@
   superTypes:
     'Neos.Neos:Content': true
     'Neos.Neos:ContentCollection': true
+
   constraints:
     nodeTypes:
       '*': false
@@ -9,13 +10,27 @@
   ui:
     label: 'Glossary'
     icon: list
+    inspector:
+      groups:
+        general:
+          label: 'General'
 
   properties:
-    headline:
+    activateLinking:
+      type: boolean
+      defaultValue: true
       ui:
-        type: string
+        label: 'Link words to the glossary page'
+        inspector:
+          group: general
+
+    headline:
+      type: string
+      defaultValue: "Glossary"
+      ui:
         inlineEditable: true
         inline:
           editorOptions:
             placeholder: 'Headline'
             autoparagraph: false
+

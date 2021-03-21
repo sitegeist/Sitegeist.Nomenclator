@@ -12,17 +12,18 @@
 
   properties:
     title:
+      type: string
       ui:
-        type: string
         inlineEditable: true
+        reloadIfChanged: true
         inline:
           editorOptions:
             placeholder: 'Enter entry term'
             autoparagraph: false
 
     description:
+      type: string
       ui:
-        type: string
         inlineEditable: true
         inline:
           editorOptions:
@@ -30,10 +31,11 @@
             autoparagraph: false
 
     variants:
-          ui:
-            type: string
-            inlineEditable: true
-            inline:
-              editorOptions:
-                placeholder: 'Enter comma separated variants'
-                autoparagraph: false
+      type: string
+      ui:
+        inlineEditable: true
+        reloadIfChanged: true
+        inline:
+          editorOptions:
+            placeholder: 'Enter comma separated variants'
+            autoparagraph: false

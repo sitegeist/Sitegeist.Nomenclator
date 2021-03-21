@@ -20,12 +20,6 @@ class Package extends BasePackage
     {
         $dispatcher = $bootstrap->getSignalSlotDispatcher();
 
-        /*$dispatcher->connect(
-            PublishingService::class,
-            'nodePublished',
-            Glossary::class,
-            'whenGlossaryPublished'
-        );*/
         $dispatcher->connect(
             Workspace::class,
             'beforeNodePublishing',

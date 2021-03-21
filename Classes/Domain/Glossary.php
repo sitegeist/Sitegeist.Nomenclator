@@ -15,37 +15,57 @@ class Glossary
      */
     protected $glossaryIndexCache;
 
+    /**
+     * @var string
+     */
+    private $cacheIdentifier = "testGlossaryCache";
+
     public function beforeGlossaryPublished(TraversableNodeInterface $node, Workspace $workspace) :void
     {
         if ($node->getNodeType()->isOfType('Sitegeist.Nomenclator:Glossary.Entry')) {
-            $glossaryIndex = self::extractGlossaryIndexFromNode($node);
-
-            if ($glossaryIndex) {
-                $cacheIdentifier = "testGlossaryCache";
-                $this->glossaryIndexCache->set($cacheIdentifier, serialize($glossaryIndex), [], 86400);
+            $glossaryNode = $node->findParentNode();
+            $this->saveGlossaryInCache($glossaryNode);
             }
+    }
+
+    public function saveGlossaryInCache(TraversableNodeInterface $glossaryNode) {
+        $glossaryIndex = $this->extractGlossaryIndexFromNode($glossaryNode);
+
+        if ($glossaryIndex) {
+            $this->glossaryIndexCache->flush();
+            $this->glossaryIndexCache->set($this->cacheIdentifier, serialize($glossaryIndex), [], 86400);
+        }
+        file_put_contents('./debug.txt', json_encode($glossaryIndex).PHP_EOL , FILE_APPEND | LOCK_EX);
+    }
+
+    /**
+     * Returns Glossary Index Cache
+     * @param TraversableNodeInterface $glossaryNode
+     * @return array
+     * @throws \Neos\Cache\Exception
+     */
+    public function readGlossaryIndexFromCache(TraversableNodeInterface $glossaryNode): array
+    {
+        if ($this->glossaryIndexCache->has($this->cacheIdentifier)) {
+            return unserialize($this->glossaryIndexCache->get($this->cacheIdentifier));
+        } else {
+            return $this->glossaryIndexCache->set($this->cacheIdentifier, $this->extractGlossaryIndexFromNode($glossaryNode));
         }
     }
 
-
-
-    public static function extractGlossaryIndexFromNode(TraversableNodeInterface $node) : array
+    protected function extractGlossaryIndexFromNode(TraversableNodeInterface $glossaryNode) : array
     {
+        $nodeType = $glossaryNode->getNodeType();
+
+        if (!$nodeType->isOfType('Sitegeist.Nomenclator:Glossary')) {
+            return [];
+        }
+
         $glossaryIndex=[];
         $termSeparator = ',';
 
-        if ($node->getNodeType()->isOfType('Sitegeist.Nomenclator:Glossary.Entry')) {
-            try {
-                $glossaryNode = $node->findParentNode();
-            } catch (NodeException $e) {
-                return [];
-            }
-        } elseif ($node->getNodeType()->isOfType('Sitegeist.Nomenclator:Glossary')) {
-            $glossaryNode = $node;
-        }
-
         if ($glossaryNode) {
-            $terms = $identifiers = $duplicates =[];
+            $terms = $nodeIdentifiers = $termsIndex = $duplicates =[];
 
             $entryNodes = $glossaryNode->findChildNodes(new NodeTypeConstraints(false, ['Sitegeist.Nomenclator:Glossary.Entry']));
 
@@ -57,30 +77,52 @@ class Glossary
                         return $value !== ' ' && $value !== '';
                     });
 
-                    $title= $entryNode->getProperty('title');
+                    $title = $entryNode->getProperty('title');
+                    $title = trim (str_replace(['&nbsp;', '<br>'], '', $title));
 
-                    $terms[]= trim (str_replace(['&nbsp;', '<br>'], '', $title));
+                    $nodeIdentifier = $entryNode->getNodeAggregateIdentifier();
 
-                    $identifiers[] = $entryNode->getNodeAggregateIdentifier();
+                    $terms[] = $title;
+
+                    $nodeIdentifiers[] = $nodeIdentifier;
+
+                    $termsIndex[(string)$nodeIdentifier] = $title;
+
 
                     foreach ($variants as $variant)  {
                         $terms[]=  trim (str_replace(['&nbsp;', '<br>'], '', $variant));
-                        $identifiers[] = $entryNode->getNodeAggregateIdentifier();
+                        $nodeIdentifiers[] = $nodeIdentifier;
                     }
                 }
             }
 
-            foreach (array_count_values($terms) as $val => $count) {
-                if ($count > 1) $duplicates[] = $val;
-            }
-
-            if ($duplicates) {
+            if ($duplicates = $this->glossaryDuplicates($terms, $nodeIdentifiers, $termsIndex)) {
                 throw GlossaryEntryInvalid::becauseThereAreSomeDuplicates($duplicates);
             }
 
-            $glossaryIndex = array_combine ($terms, $identifiers );
+            $glossaryIndex = array_combine ($terms, $nodeIdentifiers );
         }
 
         return $glossaryIndex;
+    }
+
+    private function glossaryDuplicates(array $terms,array $nodeIdentifiers, array $termsIndex) : array
+    {
+
+        $duplicates=[];
+
+        $counts = array_count_values($terms);
+
+        foreach ($terms as $index => $value) {
+            if ($counts[$value] > 1) {
+                $duplicates[] = $termsIndex[(string)$nodeIdentifiers[$index]];
+            }
+        }
+
+        if ($duplicates) {
+            return array_values(array_unique($duplicates));
+        }
+
+        return $duplicates;
     }
 }

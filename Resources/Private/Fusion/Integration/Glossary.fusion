@@ -1,6 +1,5 @@
 prototype(Sitegeist.Nomenclator:Glossary) < prototype(Neos.Neos:ContentComponent) {
     headline = Neos.Neos:Editable {
-        node = ${entryItem}
         property = 'headline'
         block = false
     }
