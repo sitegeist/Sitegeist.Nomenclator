@@ -34,14 +34,15 @@ class Glossary
             }
     }
 
-    public function saveGlossaryInCache(TraversableNodeInterface $glossaryNode) {
+    public function saveGlossaryInCache(TraversableNodeInterface $glossaryNode) :array
+    {
         $glossaryIndex = $this->extractGlossaryIndexFromNode($glossaryNode);
 
         if ($glossaryIndex) {
             $this->glossaryIndexCache->flush();
             $this->glossaryIndexCache->set($this->cacheIdentifier, serialize($glossaryIndex), [], 86400);
         }
-        file_put_contents('./debug.txt', json_encode($glossaryIndex).PHP_EOL , FILE_APPEND | LOCK_EX);
+        return $glossaryIndex;
     }
 
     /**
@@ -52,10 +53,12 @@ class Glossary
      */
     public function readGlossaryIndexFromCache(TraversableNodeInterface $glossaryNode): array
     {
+
         if ($this->glossaryIndexCache->has($this->cacheIdentifier)) {
             return unserialize($this->glossaryIndexCache->get($this->cacheIdentifier));
         } else {
-            return $this->glossaryIndexCache->set($this->cacheIdentifier, $this->extractGlossaryIndexFromNode($glossaryNode));
+
+            return $this->saveGlossaryInCache($glossaryNode);
         }
     }
 

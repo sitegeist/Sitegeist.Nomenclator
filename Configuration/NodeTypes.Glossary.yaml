@@ -16,7 +16,7 @@
           label: 'General'
 
   properties:
-    activateLinking:
+    linkingActivated:
       type: boolean
       defaultValue: true
       ui:
