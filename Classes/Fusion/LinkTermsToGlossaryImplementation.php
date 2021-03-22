@@ -62,7 +62,8 @@ class LinkTermsToGlossaryImplementation extends AbstractFusionObject
         $isInBackend = $this->getNode()->getContext()->isInBackend();
         $content = $this->getValue();
 
-        if(!$glossaryNode->getProperty('linkingActivated') || !$isInBackend || !$glossaryNode) {
+        if(!$glossaryNode->getProperty('linkingActivated') || $isInBackend || !$glossaryNode) {
+
             return $content;
         }
 
@@ -109,7 +110,6 @@ class LinkTermsToGlossaryImplementation extends AbstractFusionObject
             $lastBracket=$currentBracket;
 
         }
-
 
         return $processedContent;
 
