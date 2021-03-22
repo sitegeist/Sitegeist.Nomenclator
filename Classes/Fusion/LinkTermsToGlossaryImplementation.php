@@ -63,7 +63,7 @@ class LinkTermsToGlossaryImplementation extends AbstractFusionObject
         $content = $this->getValue();
 
         if(!$glossaryNode->getProperty('linkingActivated') || !$isInBackend || !$glossaryNode) {
-            return content;
+            return $content;
         }
 
         $glossaryIndex = $this->glossary->readGlossaryIndexFromCache($glossaryNode);
@@ -77,44 +77,42 @@ class LinkTermsToGlossaryImplementation extends AbstractFusionObject
             $replaces[] = sprintf($wrappingPattern,$value,$key);
         }
 
-        $processedContent =  $content ;
+        $lastBracket = '';
 
-        if($glossaryNode && !$isInBackend) {
-            $lastBracket = '';
+        $processedContent = "" ;
 
-            while(strlen($content)){
+        while(strlen($content)){
 
+            $nextLaBracket = (strpos($content,'<') === false) ? strlen($content) - 1 : strpos($content,'<') ;
+            $nextRaBracket = (strpos($content,'>') === false) ? strlen($content) - 1 : strpos($content,'>') ;
 
-                $nextLaBracket = (strpos($content,'<') === false)? strlen($content)-1 : strpos($content,'<') ;
-                $nextRaBracket = (strpos($content,'>') === false)? strlen($content)-1 : strpos($content,'>') ;
+            $currentPosition = min ($nextLaBracket , $nextRaBracket) ;
 
+            $currentBracket = $content[$currentPosition];
 
-                $currentPosition = min ($nextLaBracket , $nextRaBracket) ;
+            $buffer = substr($content,0,++$currentPosition);
 
-                $currentBracket =$content[$currentPosition];
-
-                $buffer = substr($content,0,++$currentPosition);
-                $content = substr($content, $currentPosition);
+            $content = substr($content, $currentPosition);
 
 
-                if($lastBracket == '<' && $currentBracket == '>') {
+            if($lastBracket == '<' && $currentBracket == '>') {
 
-                    $processedContent = $processedContent . $buffer;
+                $processedContent = $processedContent . $buffer;
 
-                } else {
+            } else {
 
-                    $processedContent = $processedContent . str_replace($originals, $replaces, $buffer);
-
-                }
-
-                $lastBracket=$currentBracket;
+                $processedContent = $processedContent . str_replace($originals, $replaces, $buffer);
 
             }
+            file_put_contents('./debug.txt', $processedContent.PHP_EOL , FILE_APPEND | LOCK_EX);
 
-            return $processedContent;
+            $lastBracket=$currentBracket;
+
         }
 
-        return $content;
+
+        return $processedContent;
+
     }
 
 }

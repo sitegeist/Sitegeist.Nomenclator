@@ -80,50 +80,9 @@ class TryCommandController extends CommandController
         $glossaryNode = $contentContext->getNodeByIdentifier('592237fc-5532-4696-9e87-804daa7e40ee');
         $glossaryNode = $glossaryNode->findParentNode();
 
-
-        /*foreach($terms as $key => $value ) {
-            file_put_contents('./Web/debug.txt', $key.PHP_EOL , FILE_APPEND | LOCK_EX);
-            file_put_contents('./Web/debug.txt', json_encode($value).PHP_EOL , FILE_APPEND | LOCK_EX);
-
-            file_put_contents('./Web/debug.txt', "-----------------".PHP_EOL , FILE_APPEND | LOCK_EX);
-        }*/
-
-
-        /*file_put_contents('./Web/debug.txt', "----------------------------------------".PHP_EOL , FILE_APPEND | LOCK_EX);
-        file_put_contents('./Web/debug.txt', "terms:".PHP_EOL , FILE_APPEND | LOCK_EX);
-        file_put_contents('./Web/debug.txt', "----------------------------------------".PHP_EOL , FILE_APPEND | LOCK_EX);
-        file_put_contents('./Web/debug.txt', "----------------------------------------".PHP_EOL , FILE_APPEND | LOCK_EX);*/
     }
 
-    public function test2Command(): void
-    {
 
-        /*$pattern = '/<[^>]*>/';
-
-        $source = ['SOURCE1', 'SOURCE2', 'SOURCE3'];
-        $dest = ['DEST1', 'DEST2', 'DEST3'];
-
-        $subject = "Contrary to SOURCE1 belief, Lorem Ipsum is not simply SOURCE2 text. It has roots in a piece of classical SOURCE3 literature from 45 BC"
-
-        $result = preg_replace_callback($pattern,
-            function($m) {
-                static $id = 0;
-                $id++;
-                return "<div class=\"otsection\" id=\"ots".$id."\">".$m[1]."</div>";
-            },
-            $subject);*/
-
-
-
-
-
-
-
-        file_put_contents('./Web/debug.txt', json_encode(array_values(array_unique($duplicates))) . PHP_EOL, FILE_APPEND | LOCK_EX);
-
-
-
-    }
 
     public function test3Command() :void
     {
