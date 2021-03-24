@@ -9,8 +9,11 @@ prototype(Sitegeist.Nomenclator:Presentation.Glossary.Entry) < prototype(Neos.Fu
                 {props.title}
             </dfn>
         </dt>
+        <dd @if.isBackend={props.shortDescription} style='margin:20px;'>
+            {props.shortDescription}
+        </dd>
         <dd style='margin:20px;'>
-            {props.description}
+            {props.longDescription}
             <img src={props.imageSource}/>
         </dd>
         <dd @if.isBackend={props.variants}>

@@ -1,0 +1,18 @@
+#                                                                        #
+# Security policy for the Sitegeist.Nomenclator package        #
+#                                                                        #
+
+privilegeTargets:
+
+  'Neos\Flow\Security\Authorization\Privilege\Method\MethodPrivilege':
+    'Sitegeist.Nomenclator:GlossaryEntry':
+      matcher: 'method(Sitegeist\Nomenclator\Application\Controller\GlossaryEntryController->(findEntry)Action())'
+
+
+roles:
+
+  'Neos.Flow:Everybody':
+    privileges:
+      -
+        privilegeTarget: 'Sitegeist.Nomenclator:GlossaryEntry'
+        permission: GRANT

@@ -21,7 +21,16 @@
             placeholder: 'Enter entry term'
             autoparagraph: false
 
-    description:
+    shortDescription:
+      type: string
+      ui:
+        inlineEditable: true
+        inline:
+          editorOptions:
+            placeholder: 'Enter a short description for the entry.'
+            autoparagraph: false
+
+    longDescription:
       type: string
       ui:
         inlineEditable: true

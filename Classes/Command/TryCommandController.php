@@ -6,6 +6,7 @@ namespace Sitegeist\Nomenclator\Command;
  *                                                                                         */
 
 use Neos\ContentRepository\Domain\Model\Workspace;
+use Neos\ContentRepository\Domain\NodeAggregate\NodeName;
 use Neos\ContentRepository\Domain\NodeType\NodeTypeConstraints;
 use Neos\ContentRepository\Domain\Projection\Content\TraversableNodeInterface;
 use Neos\ContentRepository\Exception\NodeException;
@@ -79,7 +80,6 @@ class TryCommandController extends CommandController
 
         $glossaryNode = $contentContext->getNodeByIdentifier('592237fc-5532-4696-9e87-804daa7e40ee');
         $glossaryNode = $glossaryNode->findParentNode();
-
     }
 
 

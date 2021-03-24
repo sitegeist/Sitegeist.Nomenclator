@@ -14,11 +14,19 @@ prototype(Sitegeist.Nomenclator:Glossary) < prototype(Neos.Neos:ContentComponent
                 property = 'title'
                 block = false
             }
-            description = Neos.Neos:Editable {
+            shortDescription = Neos.Neos:Editable {
+                @if.inBackend = ${node.context.inBackend}
                 node = ${entryItem}
-                property = 'description'
+                property = 'shortDescription'
                 block = false
             }
+
+            longDescription = Neos.Neos:Editable {
+                node = ${entryItem}
+                property = 'longDescription'
+                block = false
+            }
+
             variants = Neos.Neos:Editable {
                 @if.inBackend = ${node.context.inBackend}
                 node = ${entryItem}

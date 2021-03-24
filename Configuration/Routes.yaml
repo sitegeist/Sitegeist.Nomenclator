@@ -1,0 +1,11 @@
+##
+# Glossary Entry: Request
+-
+  name:  'Glossary Entry'
+  uriPattern: 'glossary/entry/{identifier}'
+  defaults:
+    '@package':    'Sitegeist.Nomenclator'
+    '@subpackage': 'Application'
+    '@controller': 'GlossaryEntry'
+    '@action':     'findEntry'
+  httpMethods: ['GET']

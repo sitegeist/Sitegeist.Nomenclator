@@ -4,8 +4,17 @@ Neos:
       autoInclude:
         Sitegeist.Nomenclator: true
 
+  Flow:
+    mvc:
+      routes:
+        'Sitegeist.Nomenclator':
+          position: 'before Neos.Neos'
 
 Sitegeist:
   Nomenclator:
       glossary:
         separator: ','
+
+
+
+
