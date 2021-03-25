@@ -3,12 +3,18 @@ prototype(Sitegeist.Nomenclator:Document.Glossary) < prototype(Neos.Fusion:Compo
     renderer = Neos.Neos:Page {
 
         head {
-
-            stylesheets = Neos.Fusion:Tag {
+            glossaryStylesheets = Neos.Fusion:Tag {
                 tagName = 'link'
                 attributes.rel = 'stylesheet'
                 attributes.href = Neos.Fusion:ResourceUri {
                     path = 'resource://Sitegeist.Nomenclator/Public/Styles/main.css'
+                    @process.stripBaseUri = ${(
+                        String.replace(
+                            value,
+                            Configuration.setting('Neos.Flow.http.baseUri'),
+                            '/'
+                        )
+                    )}
                 }
             }
         }
@@ -20,7 +26,7 @@ prototype(Sitegeist.Nomenclator:Document.Glossary) < prototype(Neos.Fusion:Compo
             }
         }
 
-        bodyScripts = Neos.Fusion:Tag {
+        glossaryBodyScripts = Neos.Fusion:Tag {
             tagName = 'script'
             attributes.src = Neos.Fusion:ResourceUri {
                 path = 'resource://Sitegeist.Nomenclator/Public/JavaScript/main.js'
