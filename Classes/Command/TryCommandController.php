@@ -237,4 +237,8 @@ class TryCommandController extends CommandController
         return $content;
     }*/
 
+    public function testCacheCommand() {
+
+    }
+
 }

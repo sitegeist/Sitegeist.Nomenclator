@@ -105,7 +105,6 @@ class LinkTermsToGlossaryImplementation extends AbstractFusionObject
                 $processedContent = $processedContent . str_replace($originals, $replaces, $buffer);
 
             }
-            file_put_contents('./debug.txt', $processedContent.PHP_EOL , FILE_APPEND | LOCK_EX);
 
             $lastBracket=$currentBracket;
 
