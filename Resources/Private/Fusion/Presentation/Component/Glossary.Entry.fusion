@@ -1,6 +1,7 @@
-prototype(Sitegeist.Nomenclator:Presentation.Glossary.Entry) < prototype(Neos.Fusion:Component) {
+prototype(Sitegeist.Nomenclator:Component.Glossary.Entry) < prototype(Neos.Fusion:Component) {
     title = ""
-    description = ""
+    shortDescription = ""
+    longDescription = ""
     variants = ""
 
     renderer = afx`

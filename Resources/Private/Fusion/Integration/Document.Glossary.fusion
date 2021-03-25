@@ -1,0 +1,32 @@
+prototype(Sitegeist.Nomenclator:Document.Glossary) < prototype(Neos.Fusion:Component) {
+
+    renderer = Neos.Neos:Page {
+
+        head {
+
+            stylesheets = Neos.Fusion:Tag {
+                tagName = 'link'
+                attributes.rel = 'stylesheet'
+                attributes.href = Neos.Fusion:ResourceUri {
+                    path = 'resource://Sitegeist.Nomenclator/Public/Styles/main.css'
+                }
+            }
+        }
+
+        body = Sitegeist.Nomenclator:Component.Page {
+            content = Neos.Neos:ContentCollection {
+                @process.convertUris = Neos.Neos:ConvertUris
+                nodePath = 'main'
+            }
+        }
+
+        bodyScripts = Neos.Fusion:Tag {
+            tagName = 'script'
+            attributes.src = Neos.Fusion:ResourceUri {
+                path = 'resource://Sitegeist.Nomenclator/Public/JavaScript/main.js'
+            }
+        }
+        bodyScripts.@position = 'before closingBodyTag'
+
+    }
+}

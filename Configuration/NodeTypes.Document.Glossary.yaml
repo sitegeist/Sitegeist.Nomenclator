@@ -1,0 +1,19 @@
+'Sitegeist.Nomenclator:Document.Glossary':
+  superTypes:
+    'Neos.Neos:Document': true
+
+  constraints:
+    nodeTypes:
+      '*': false
+      'Sitegeist.Nomenclator:Document.Glossary': false
+
+  ui:
+    icon: book-open
+    label: Glossary
+
+  childNodes:
+    main:
+      type: 'Sitegeist.Nomenclator:Collection.Content.Main'
+      constraints:
+        nodeTypes:
+          'Sitegeist.Nomenclator:Content.Glossary': false

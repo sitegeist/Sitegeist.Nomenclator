@@ -1,4 +1,4 @@
-prototype(Sitegeist.Nomenclator:Presentation.Glossary) < prototype(Neos.Fusion:Component) {
+prototype(Sitegeist.Nomenclator:Component.Glossary) < prototype(Neos.Fusion:Component) {
     headline= ""
     entries = Neos.Fusion:DataStructure
     renderer= afx`
@@ -6,7 +6,7 @@ prototype(Sitegeist.Nomenclator:Presentation.Glossary) < prototype(Neos.Fusion:C
             <h2>{props.headline}</h2>
             <dl style="margin:40px">
                 <Neos.Fusion:Loop items={props.entries} itemName="item" @children="itemRenderer">
-                    <Sitegeist.Nomenclator:Presentation.Glossary.Entry
+                    <Sitegeist.Nomenclator:Component.Glossary.Entry
                         {...item}
                     />
                 </Neos.Fusion:Loop>

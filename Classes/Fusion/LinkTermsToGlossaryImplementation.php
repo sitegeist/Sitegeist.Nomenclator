@@ -28,7 +28,7 @@ class LinkTermsToGlossaryImplementation extends AbstractFusionObject
 
         $site = $contentContext->getCurrentSiteNode();
 
-        $glossaryNodes = (new FlowQuery([$site]))->find('[instanceof Sitegeist.Nomenclator:Glossary]')->get();
+        $glossaryNodes = (new FlowQuery([$site]))->find('[instanceof Sitegeist.Nomenclator:Content.Glossary]')->get();
 
         return reset($glossaryNodes);
     }

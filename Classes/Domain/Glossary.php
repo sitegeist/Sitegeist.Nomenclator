@@ -28,7 +28,7 @@ class Glossary
 
     public function beforeGlossaryPublished(TraversableNodeInterface $node, Workspace $workspace) :void
     {
-        if ($node->getNodeType()->isOfType('Sitegeist.Nomenclator:Glossary.Entry')) {
+        if ($node->getNodeType()->isOfType('Sitegeist.Nomenclator:Content.Glossary.Entry')) {
             $glossaryNode = $node->findParentNode();
             $this->saveGlossaryInCache($glossaryNode);
             }
@@ -66,7 +66,7 @@ class Glossary
     {
         $nodeType = $glossaryNode->getNodeType();
 
-        if (!$nodeType->isOfType('Sitegeist.Nomenclator:Glossary')) {
+        if (!$nodeType->isOfType('Sitegeist.Nomenclator:Content.Glossary')) {
             return [];
         }
 
@@ -77,7 +77,7 @@ class Glossary
         if ($glossaryNode) {
             $terms = $nodeIdentifiers = $termsIndex = $duplicates =[];
 
-            $entryNodes = $glossaryNode->findChildNodes(new NodeTypeConstraints(false, ['Sitegeist.Nomenclator:Glossary.Entry']));
+            $entryNodes = $glossaryNode->findChildNodes(new NodeTypeConstraints(false, ['Sitegeist.Nomenclator:Content.Glossary.Entry']));
 
             foreach ( $entryNodes as $entryNode) {
                 if ($entryNode->getProperty('title')) {

@@ -1,12 +1,12 @@
-'Sitegeist.Nomenclator:Glossary':
+'Sitegeist.Nomenclator:Content.Glossary':
+
   superTypes:
     'Neos.Neos:Content': true
-    'Neos.Neos:ContentCollection': true
 
   constraints:
     nodeTypes:
       '*': false
-      'Sitegeist.Nomenclator:Glossary.Entry': true
+      'Sitegeist.Nomenclator:Content.Glossary.Entry': true
   ui:
     label: 'Glossary'
     icon: list

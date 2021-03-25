@@ -1,0 +1,11 @@
+prototype(Sitegeist.Nomenclator:Component.Page) < prototype(Neos.Fusion:Component) {
+    content = ""
+
+    renderer = afx`
+
+        <main class="nomenclator-main">
+            {props.content}
+        </main>
+
+    `
+}

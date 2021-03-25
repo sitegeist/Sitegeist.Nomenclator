@@ -1,4 +1,4 @@
-'Sitegeist.Nomenclator:Glossary.Entry':
+'Sitegeist.Nomenclator:Content.Glossary.Entry':
   superTypes:
     'Neos.Neos:Content': true
     'NodeTypes.Mixin.Property.Glossary.Entry.Image': true

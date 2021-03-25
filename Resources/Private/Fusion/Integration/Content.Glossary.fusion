@@ -1,11 +1,11 @@
-prototype(Sitegeist.Nomenclator:Glossary) < prototype(Neos.Neos:ContentComponent) {
+prototype(Sitegeist.Nomenclator:Content.Glossary) < prototype(Neos.Neos:ContentComponent) {
     headline = Neos.Neos:Editable {
         property = 'headline'
         block = false
     }
 
     entries = Neos.Fusion:Map {
-        items = ${q(node).children('[instanceof Sitegeist.Nomenclator:Glossary.Entry]').get()}
+        items = ${q(node).children('[instanceof Sitegeist.Nomenclator:Content.Glossary.Entry]').get()}
         itemName = 'entryItem'
         itemRenderer = Neos.Fusion:DataStructure {
             __node = ${entryItem}
@@ -42,11 +42,11 @@ prototype(Sitegeist.Nomenclator:Glossary) < prototype(Neos.Neos:ContentComponent
         }
     }
 
-    renderer = Sitegeist.Nomenclator:Presentation.Glossary {
+    renderer = Sitegeist.Nomenclator:Component.Glossary {
         headline = ${props.headline}
         entries = ${props.entries}
     }
-    prototype(Sitegeist.Nomenclator:Presentation.Glossary.Entry) {
+    prototype(Sitegeist.Nomenclator:Component.Glossary.Entry) {
         @process.contentElementWrapping = Neos.Neos:ContentElementWrapping {
             @if.hasNode = ${item.__node}
             @if.inBackend = ${documentNode.context.inBackend}
