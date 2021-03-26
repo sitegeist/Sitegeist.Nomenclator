@@ -140,11 +140,9 @@ class LinkTermsToGlossaryImplementation extends AbstractFusionObject
             }
 
             $lastBracket=$currentBracket;
-
         }
 
         return $processedContent;
-
     }
 
 }
