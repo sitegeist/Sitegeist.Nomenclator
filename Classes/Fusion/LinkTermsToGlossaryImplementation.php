@@ -3,9 +3,11 @@ namespace Sitegeist\Nomenclator\Fusion;
 
 use Neos\ContentRepository\Domain\Projection\Content\TraversableNodeInterface;
 use Neos\Flow\Annotations as Flow;
+use Neos\Flow\Core\Bootstrap;
 use Sitegeist\Nomenclator\Domain\Glossary;
 use Neos\Fusion\FusionObjects\AbstractFusionObject;
 use Neos\Eel\FlowQuery\FlowQuery;
+use Sitegeist\Nomenclator\Infrastructure\UriService;
 
 class LinkTermsToGlossaryImplementation extends AbstractFusionObject
 {
@@ -17,11 +19,23 @@ class LinkTermsToGlossaryImplementation extends AbstractFusionObject
     protected $glossary;
 
     /**
-     * Glossary node of the site
-     *
-     * @return TraversableNodeInterface
+     * @Flow\Inject
+     * @var Bootstrap
      */
-    public function getGlossaryNode()
+    protected $bootstrap;
+
+    /**
+     * @Flow\Inject
+     * @var UriService
+     */
+    protected $uriService;
+
+    /**
+     * Glossary page and glossary root component of the site
+     *
+     * @return array
+     */
+    public function getGlossaryNodes()
     {
         /** @var $contentContext ContentContext */
         $contentContext = $this->getNode()->getContext();
@@ -30,7 +44,13 @@ class LinkTermsToGlossaryImplementation extends AbstractFusionObject
 
         $glossaryNodes = (new FlowQuery([$site]))->find('[instanceof Sitegeist.Nomenclator:Content.Glossary]')->get();
 
-        return reset($glossaryNodes);
+        $glossaryPages = (new FlowQuery([$site]))->find('[instanceof Sitegeist.Nomenclator:Document.Glossary]')->get();
+
+        $glossary['node'] = reset($glossaryNodes);
+
+        $glossary['page'] = reset($glossaryPages);
+
+        return $glossary;
     }
 
     /**
@@ -58,25 +78,20 @@ class LinkTermsToGlossaryImplementation extends AbstractFusionObject
     {
 
 
-        $glossaryNode = $this->getGlossaryNode();
+        $glossary = $this->getGlossaryNodes();
+
         $isInBackend = $this->getNode()->getContext()->isInBackend();
+
         $content = $this->getValue();
 
-        if(!$glossaryNode->getProperty('linkingActivated') || $isInBackend || !$glossaryNode) {
+        if(!$glossary['node']->getProperty('linkingActivated') || $isInBackend || !$glossary['node']) {
 
             return $content;
         }
 
-        $glossaryIndex = $this->glossary->readGlossaryIndexFromCache($glossaryNode);
+        $glossaryIndex = $this->glossary->readGlossaryIndexFromCache($glossary['node']);
 
-        $originals = $replaces =[];
-
-        $wrappingPattern = '<a class="nomenclator_enrty" href="glossaryURL/%s" >%s</a>';
-
-        foreach ($glossaryIndex as $key => $value) {
-            $originals[] = $key;
-            $replaces[] = sprintf($wrappingPattern,$value,$key);
-        }
+        $glossaryUri = $this->uriService->getNodeUri($glossary['page']);
 
         $lastBracket = '';
 
@@ -101,9 +116,21 @@ class LinkTermsToGlossaryImplementation extends AbstractFusionObject
                 $processedContent = $processedContent . $buffer;
 
             } else {
+                foreach ($glossaryIndex['terms'] as $term => $identifier) {
 
-                $processedContent = $processedContent . str_replace($originals, $replaces, $buffer);
+                    $pattern = '/\b'.$term.'\b/i';
 
+                    $buffer = preg_replace_callback ($pattern , function($matches) use ($glossaryIndex, $identifier, $glossaryUri){
+
+                        return sprintf('<a class="nomenclator_enrty" href="%s#%s" data-identifier="%s">%s</a>', $glossaryUri, $glossaryIndex['titles'][(string)$identifier],$identifier ,$matches[0]);
+
+
+                    },
+                    $buffer);
+
+                }
+
+                $processedContent = $processedContent . $buffer;
             }
 
             $lastBracket=$currentBracket;

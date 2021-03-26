@@ -238,7 +238,31 @@ class TryCommandController extends CommandController
     }*/
 
     public function testCacheCommand() {
+        $cacheIdentifier = "testGlossaryCache";
 
+        if ($this->glossaryIndexCache->has($cacheIdentifier)) {
+            $glossaryIndex = unserialize($this->glossaryIndexCache->get($cacheIdentifier));
+            file_put_contents('./Web/debug.txt', json_encode($glossaryIndex).PHP_EOL , FILE_APPEND | LOCK_EX);
+
+
+
+        }
+    }
+
+    public function test44Command(){
+        $keys   = array('u1','u2','u3');
+        $names  = array('Bob','Fred','Joe');
+        $emails = array('bob@mail.com','fred@mail.com','joe@mail.com');
+        $ids    = array(1,2,3);
+        $result = array();
+
+        foreach ($keys as $id => $key) {
+            $result[$key] = array(
+                'name'  => $names[$id],
+                'email' => $emails[$id],
+                'id'    => $ids[$id],
+            );
+        }
     }
 
 }

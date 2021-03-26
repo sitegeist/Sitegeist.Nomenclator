@@ -75,7 +75,7 @@ class Glossary
         $termSeparator = $this->settings['separator'];
 
         if ($glossaryNode) {
-            $terms = $nodeIdentifiers = $termsIndex = $duplicates =[];
+            $terms = $nodeIdentifiers = $titles = $duplicates =[];
 
             $entryNodes = $glossaryNode->findChildNodes(new NodeTypeConstraints(false, ['Sitegeist.Nomenclator:Content.Glossary.Entry']));
 
@@ -83,11 +83,13 @@ class Glossary
                 if ($entryNode->getProperty('title')) {
 
                     $variants =  explode($termSeparator , $entryNode->getProperty('variants'));
+
                     $variants = array_filter($variants, function($value) {
                         return $value !== ' ' && $value !== '';
                     });
 
                     $title = $entryNode->getProperty('title');
+
                     $title = trim (str_replace(['&nbsp;', '<br>'], '', $title));
 
                     $nodeIdentifier = $entryNode->getNodeAggregateIdentifier();
@@ -96,27 +98,28 @@ class Glossary
 
                     $nodeIdentifiers[] = $nodeIdentifier;
 
-                    $termsIndex[(string)$nodeIdentifier] = $title;
-
+                    $titles[(string)$nodeIdentifier] = $title;
 
                     foreach ($variants as $variant)  {
                         $terms[]=  trim (str_replace(['&nbsp;', '<br>'], '', $variant));
+
                         $nodeIdentifiers[] = $nodeIdentifier;
                     }
                 }
             }
 
-            if ($duplicates = $this->glossaryDuplicates($terms, $nodeIdentifiers, $termsIndex)) {
+            if ($duplicates = $this->glossaryDuplicates($terms, $nodeIdentifiers, $titles)) {
                 throw GlossaryEntryInvalid::becauseThereAreSomeDuplicates($duplicates);
             }
 
-            $glossaryIndex = array_combine ($terms, $nodeIdentifiers );
+            $glossaryIndex['terms'] = array_combine ($terms, $nodeIdentifiers );
+            $glossaryIndex['titles'] = $titles;
         }
 
         return $glossaryIndex;
     }
 
-    private function glossaryDuplicates(array $terms,array $nodeIdentifiers, array $termsIndex) : array
+    private function glossaryDuplicates(array $terms,array $nodeIdentifiers, array $titles) : array
     {
 
         $duplicates=[];
@@ -125,7 +128,7 @@ class Glossary
 
         foreach ($terms as $index => $value) {
             if ($counts[$value] > 1) {
-                $duplicates[] = $termsIndex[(string)$nodeIdentifiers[$index]];
+                $duplicates[] = $titles[(string)$nodeIdentifiers[$index]];
             }
         }
 
