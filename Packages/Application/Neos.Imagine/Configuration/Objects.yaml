@@ -1,0 +1,2 @@
+Imagine\Image\ImagineInterface:
+  factoryObjectName: Neos\Imagine\ImagineFactory

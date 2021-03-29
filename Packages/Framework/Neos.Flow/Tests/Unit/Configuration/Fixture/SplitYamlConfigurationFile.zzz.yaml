@@ -1,0 +1,6 @@
+configurationFileHasBeenLoaded: true
+Neos:
+  Flow:
+    something: 'zzz'
+    aboolean: true
+    toBeOverwritten: 2

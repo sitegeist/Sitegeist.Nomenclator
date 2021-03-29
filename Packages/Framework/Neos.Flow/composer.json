@@ -1,0 +1,85 @@
+{
+    "name": "neos/flow",
+    "type": "neos-framework",
+    "description": "Flow Application Framework",
+    "homepage": "http://flow.neos.io",
+    "license": ["MIT"],
+
+    "require": {
+        "php": "^7.3 || ^8.0",
+
+        "ext-zlib": "*",
+        "ext-SPL": "*",
+        "ext-json": "*",
+        "ext-reflection": "*",
+        "ext-xml": "*",
+
+        "neos/cache": "~7.0.0",
+        "neos/eel": "~7.0.0",
+        "neos/error-messages": "~7.0.0",
+        "neos/utility-arrays": "~7.0.0",
+        "neos/utility-files": "~7.0.0",
+        "neos/utility-mediatypes": "~7.0.0",
+        "neos/utility-objecthandling": "~7.0.0",
+        "neos/utility-opcodecache": "~7.0.0",
+        "neos/utility-schema": "~7.0.0",
+        "neos/utility-unicode": "~7.0.0",
+        "neos/flow-log": "~7.0.0",
+        "neos/http-factories": "~7.0.0",
+
+        "psr/http-message": "^1.0",
+        "psr/http-factory": "^1.0",
+        "psr/container": "^1.0",
+        "psr/log": "^1.0",
+        "psr/http-server-middleware": "^1.0",
+        "psr/http-server-handler": "^1.0",
+
+        "ramsey/uuid": "^3.0 || ^4.0",
+
+        "doctrine/orm": "^2.7",
+        "doctrine/migrations": "^3.0",
+        "doctrine/dbal": "^2.12",
+        "doctrine/common": "^2.13.1 || ^3.0",
+
+        "symfony/yaml": "^5.1",
+        "symfony/dom-crawler": "^5.1",
+        "symfony/console": "^5.1",
+
+        "neos/composer-plugin": "^2.0",
+        "neos/utility-pdo": "~7.0.0",
+
+        "composer/composer": "^1.9 || ^2.0",
+
+        "egulias/email-validator": "^2.1"
+    },
+    "require-dev": {
+        "vimeo/psalm": "~4.1.1"
+    },
+    "suggest": {
+        "ext-curl": "To use the \\Neos\\Flow\\Http\\Client\\CurlEngine",
+        "doctrine/data-fixtures": "To manage and execute the loading of data fixtures for the Doctrine ORM or ODM",
+        "neos/party": "To make use of basic user handling",
+        "php-uuid": "For fast generation of UUIDs used in the persistence.",
+        "neos/fluid-adaptor": "For rendering templates with TYPO3.Fluid"
+    },
+    "autoload": {
+        "psr-4": {
+            "Neos\\Flow\\": "Classes",
+            "Neos\\Flow\\Core\\Migrations\\": "Scripts/Migrations"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Neos\\Flow\\Tests\\": "Tests"
+        }
+    },
+    "extra": {
+        "neos": {
+            "package-key": "Neos.Flow"
+        },
+        "applied-flow-migrations": [
+            "Neos.Media-20161124233100",
+            "Neos.Flow-20201003165200"
+        ]
+    }
+}

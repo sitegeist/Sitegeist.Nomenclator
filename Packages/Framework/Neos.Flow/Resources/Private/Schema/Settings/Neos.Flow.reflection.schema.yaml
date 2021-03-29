@@ -1,0 +1,8 @@
+type: dictionary
+additionalProperties: false
+properties:
+  'ignoredTags':
+    type: dictionary
+    required: true
+    additionalProperties: { type: boolean }
+  'logIncorrectDocCommentHints': { type: boolean, required: true }

@@ -1,0 +1,72 @@
+.nomenclator-main {
+	padding: 5vw;
+}
+
+.nomentclator-main glossary{
+	font-family: inherit;
+}
+
+.glossary__entry--title {
+	font-weight: 600;
+	padding: 10px 0 10px;
+	margin-top:15px;
+}
+
+.glossary__entry--short-desc , .glossary__entry--variants{
+	padding: 10px 15px 10px;
+	margin-left: 0;
+	border: 1px solid #d2d2d2;
+}
+
+.glossary__entry--long-desc {
+	padding: 25px 0 0;
+	margin-left: 0;
+	display: flex;
+	flex-direction: row-reverse;
+	align-items: flex-start;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+.glossary__entry--long-desc div {
+	flex: 1 0 300px;
+}
+
+.glossary__entry--long-desc img {
+	max-width: 300px;
+	height: auto;
+	margin : 0 20px 35px;
+}
+
+#entry-modal {
+	position: absolute;
+	border-radius: 10px;
+	background-color: #333;
+	color: #fff;
+	padding: 15px;
+	width: 250px;
+	height: auto;
+	font-size: 0.8em;
+	line-height: 1.4em;
+}
+
+.nomenclator_enrty {
+	display: inline-block;
+	text-decoration: none;
+	border-bottom: 1px dotted #666;
+}
+
+#entry-modal .modal-link {
+	font-size: 1.2em;
+	font-weight: 600;
+	color: #fff8f8;
+	text-decoration: none;
+}
+
+body {
+
+}
+
+
+.neos-contentcollection{
+	position: relative;
+}

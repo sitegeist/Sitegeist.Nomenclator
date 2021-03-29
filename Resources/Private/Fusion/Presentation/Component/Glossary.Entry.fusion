@@ -5,17 +5,23 @@ prototype(Sitegeist.Nomenclator:Component.Glossary.Entry) < prototype(Neos.Fusio
     variants = ""
 
     renderer = afx`
-        <dt class="glossary__entry--title" style={"margin-top:40px;font-weight: 600;"}>
+        <dt id={props.title} class="glossary__entry--title">
             <dfn>
                 {props.title}
             </dfn>
         </dt>
-        <dd class="glossary__entry--short-desc" @if.isBackend={props.shortDescription} style='margin:20px;'>
+        <dd class="glossary__entry--short-desc" @if.isBackend={props.shortDescription}>
             {props.shortDescription}
         </dd>
-        <dd class="glossary__entry--long-desc" style='margin:20px;'>
-            {props.longDescription}
-            <img src={props.imageSource}/>
+        <dd class="glossary__entry--long-desc">
+            <Sitegeist.Kaleidoscope:Image
+                imageSource={props.imageSource}
+                sizes={props.sizes}
+                srcset={props.srcset}
+                title={props.imageTitle}
+                alt={props.imageAlt}
+            />
+            <div>{props.longDescription}</div>
         </dd>
         <dd class="glossary__entry--variants" @if.isBackend={props.variants}>
             {props.variants}

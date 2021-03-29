@@ -1,0 +1,27 @@
+prototype(Neos.Fusion.Form:Radio)  < prototype(Neos.Fusion.Form:Component.Field) {
+
+    renderer = Neos.Fusion:Component {
+
+        #
+        # pass down props
+        #
+        attributes = ${props.attributes}
+
+        #
+        # the `checked` state is calculated outside the renderer to allow` overriding via `attributes`
+        #
+        checked = false
+        checked.@process.checkValue = ${field.getCurrentValueStringified() == field.getTargetValueStringified()}
+        checked.@process.checkValue.@if.hasValue = ${field.hasCurrentValue()}
+
+        renderer = afx`
+            <input
+                type="radio"
+                name={field.getName()}
+                value={field.getTargetValueStringified()}
+                checked={props.checked}
+                {...props.attributes}
+            />
+        `
+    }
+}

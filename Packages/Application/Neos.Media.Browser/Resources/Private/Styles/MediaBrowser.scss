@@ -1,0 +1,17 @@
+// Override font awesome font path as it's include from the Neos.Neos package
+$fa-font-path: "../../Neos.Neos/Library/fontawesome/webfonts";
+
+// Core variables and mixins
+@import "compass";
+@import "../../../../Neos.Neos/Resources/Private/Styles/Foundation/variables";
+@import "../../../../Neos.Neos/Resources/Private/Styles/Foundation/mixins";
+@import "../../../../Neos.Neos/Resources/Private/Styles/Constants";
+@import "../../../../Neos.Neos/Resources/Private/Styles/Mixins";
+@import "../../../../Neos.Neos/Resources/Private/Styles/Fonts";
+@import "../../../../Neos.Neos/Resources/Public/Library/fontawesome/scss/variables";
+@import "../../../../Neos.Neos/Resources/Public/Library/fontawesome/scss/mixins";
+@import "../../../../Neos.Neos/Resources/Public/Library/fontawesome/scss/solid";
+
+.neos {
+	@import "Media/Media";
+}

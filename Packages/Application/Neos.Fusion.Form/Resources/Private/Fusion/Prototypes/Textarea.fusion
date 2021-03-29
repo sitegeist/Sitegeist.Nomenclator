@@ -1,0 +1,11 @@
+prototype(Neos.Fusion.Form:Textarea)  < prototype(Neos.Fusion.Form:Component.Field) {
+
+    renderer = afx`
+        <textarea
+            name={field.getName()}
+            {...props.attributes}
+        >
+            {String.htmlspecialchars(field.getCurrentValueStringified() || props.content)}
+        </textarea>
+    `
+}

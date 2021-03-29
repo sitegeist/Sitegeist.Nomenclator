@@ -1,0 +1,40 @@
+type: array
+items:
+  type: dictionary
+  additionalProperties: false
+  properties:
+    'name': {type: string, required: true}
+    'uriPattern': {type: string, required: true}
+    'defaults':
+      type: dictionary
+      properties:
+        '@action': {type: string}
+        '@controller': {type: string}
+        '@format': {type: string}
+        '@package': {type: string}
+        '@subpackage': {type: string}
+    'routeParts':
+      type: dictionary
+      additionalProperties:
+        -
+          type: dictionary
+          additionalProperties: false
+          properties:
+            'handler': {type: string, required: true, format: class-name}
+            'options': {type: dictionary }
+            'toLowerCase':  {type: boolean }
+        -
+          type: dictionary
+          additionalProperties: false
+          properties:
+            'objectType': {type: string, required: true, format: class-name}
+            'uriPattern': {type: string}
+            'options': {type: dictionary }
+            'toLowerCase':  {type: boolean }
+    'appendExceedingArguments': {type: boolean}
+    'toLowerCase': {type: boolean}
+    'httpMethods':
+      type: array
+
+    # subRoutes do not exist here
+    # as they are expanded by the configuration manager

@@ -1,0 +1,112 @@
+prototype(Neos.Fusion:DataStructure).@class = 'Neos\\Fusion\\FusionObjects\\DataStructureImplementation'
+prototype(Neos.Fusion:Attributes).@class = 'Neos\\Fusion\\FusionObjects\\AttributesImplementation'
+prototype(Neos.Fusion:DataStructure).@class = 'Neos\\Fusion\\FusionObjects\\DataStructureImplementation'
+prototype(Neos.Fusion:Tag) {
+  @class = 'Neos\\Fusion\\FusionObjects\\TagImplementation'
+  attributes = Neos.Fusion:DataStructure
+  omitClosingTag = false
+  selfClosingTag = false
+}
+
+tag.plainAttributes = Tag {
+  tagName = 'link'
+  selfClosingTag = true
+  attributes {
+    rel = 'stylesheet'
+    type = 'text/css'
+  }
+}
+
+tag.objectAttributes = Tag {
+  tagName = 'test'
+  selfClosingTag = true
+  attributes {
+    sum = ${2 + 2}
+  }
+}
+
+tag.arrayAttributes = Tag {
+  attributes {
+    class = DataStructure
+    class.a = 'a'
+    class.b = 'b'
+  }
+}
+
+tag.fusionAttributes = Tag {
+  attributes = Neos.Fusion:Attributes {
+    key = 'value'
+    list = ${['foo', 'bar']}
+  }
+}
+
+tag.dataStructureAttributes = Tag {
+  attributes = Neos.Fusion:DataStructure {
+    key = 'value'
+    list = ${['foo', 'bar']}
+  }
+}
+
+tag.booleanAttributes = Tag {
+  attributes = Neos.Fusion:DataStructure {
+    foo = true
+    bar = false
+    baz = null
+  }
+}
+
+tag.booleanAttributesAndForbiddenEmptyAttributes = Tag {
+  allowEmptyAttributes = false
+  attributes = Neos.Fusion:DataStructure {
+    foo = true
+    bar = false
+    baz = null
+  }
+}
+
+tag.booleanAttributesAndAllowEmptyAttributes = Tag {
+  allowEmptyAttributes = true
+  attributes = Neos.Fusion:DataStructure {
+    foo = true
+    bar = false
+    baz = null
+  }
+}
+
+tag.plainContent = Tag {
+  tagName = 'span'
+  content = 'test'
+}
+
+tag.objectContent = Tag {
+  tagName = 'span'
+  content = ${2 + 2}
+}
+
+tag.registeredSelfClosingTag = Tag {
+  tagName = 'br'
+}
+
+tag.omitClosingTag = Tag {
+  tagName = 'test'
+  omitClosingTag = true
+}
+
+tag.withThis = Tag {
+  tagName = 'title'
+  attributes {
+    databar = 'baz'
+    datafoo = ${this.databar + '_baz'}
+  }
+  content = 'foo'
+}
+
+tag.withIgnorePropertiesInAttributes = Tag {
+  tagName = 'title'
+  attributes {
+    @ignoreProperties = ${['databar']}
+    databar = 'baz'
+    datafoo = ${this.databar + '_baz'}
+  }
+  content = 'foo'
+}

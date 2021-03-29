@@ -1,0 +1,86 @@
+#
+# HTTP configuration for the Flow Framework
+#
+
+Neos:
+  Flow:
+    http:
+      # Defines the "application token" which is sent by in HTTP Response "X-Flow-Powered" headers.
+      #
+      # The value can be one of:
+      #
+      # - "Off" (no application token header is sent)
+      # - "ApplicationName" (the application name only, determined via the Neos.Flow.core.applicationKey setting)
+      # - "MajorVersion" (the application name + major version, e.g. "Neos/2"
+      # - "MinorVersion" (the application name + minor version, e.g. "Neos/2.1"
+      #
+      applicationToken: 'MinorVersion'
+
+      # Defines an explicit base URI that should be used. This affects
+      # resource management, routing and all other parts accessing
+      # "Http\Request->getBaseUri()".
+      #
+      # If this setting is NULL, the base URI will be detected from the current
+      # request (default).
+      baseUri: NULL
+
+      # Defines the PSR-15 middlewares that a request goes through in a flow
+      middlewares:
+        # The following middleware components are executed first since they influence the incoming request or outgoing response
+        'standardsCompliance':
+          position: 'start 100'
+          middleware: 'Neos\Flow\Http\Middleware\StandardsComplianceMiddleware'
+        'trustedProxies':
+          position: 'start 50'
+          middleware: 'Neos\Flow\Http\Middleware\TrustedProxiesMiddleware'
+        'session':
+          position: 'start 10'
+          middleware: 'Neos\Flow\Http\Middleware\SessionMiddleware'
+
+        # The execution order of the following middleware components is deliberately not specified.
+        # To run a middleware before or after an existing one, you can use "position: before <name>" or "position: after <name>"
+        'routing':
+          middleware: 'Neos\Flow\Mvc\Routing\RoutingMiddleware'
+        'poweredByHeader':
+          middleware: 'Neos\Flow\Http\Middleware\PoweredByMiddleware'
+        'flashMessages':
+          middleware: 'Neos\Flow\Mvc\FlashMessage\FlashMessageMiddleware'
+        'parseBody':
+          middleware: 'Neos\Flow\Http\Middleware\RequestBodyParsingMiddleware'
+        'securityEntryPoint':
+          middleware: 'Neos\Flow\Http\Middleware\SecurityEntryPointMiddleware'
+
+        # The dispatch middleware component is usually executed at the end of the chain since it creates the Response instance
+        # that is then passed back through the chain
+        'dispatch':
+          position: 'end 100'
+          middleware: 'Neos\Flow\Mvc\DispatchMiddleware'
+
+      trustedProxies:
+
+        # Defines Proxy servers which are trusted for setting request headers
+        # By default no proxies are trusted, unless the environment variable FLOW_HTTP_TRUSTED_PROXIES is set.
+        # If you have some reverse proxies or CDN running in front of your server, you should provide
+        # an array list of those servers' addresses or address ranges (in CIDR notation) here.
+        # Alternatively, you can provide a comma separated list of address ranges, which is useful when
+        # specifying the addresses through the environment variable.
+        #
+        # If you are unsure, you can set the option to "*" to trust all proxies, but this is not recommended.
+        #
+        # proxies:
+        #   - '216.246.40.0/24'
+        #   - '216.246.100.0/24'
+        proxies: '%env:FLOW_HTTP_TRUSTED_PROXIES%'
+
+        # Defines request headers which are trusted from proxies to override important request information
+        # Each value can be a single header or a comma separated list of headers
+        headers:
+          clientIp: 'X-Forwarded-For'
+          host: 'X-Forwarded-Host'
+          port: 'X-Forwarded-Port'
+          proto: 'X-Forwarded-Proto'
+
+      serverRequestDefaults:
+        userAgent: 'Flow/%FLOW_VERSION_BRANCH%.x'
+        scriptPath: '%FLOW_PATH_WEB%index.php'
+        protocolVersion: '1.1'

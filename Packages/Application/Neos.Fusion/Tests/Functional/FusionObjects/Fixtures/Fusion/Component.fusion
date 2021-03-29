@@ -1,0 +1,71 @@
+prototype(Neos.Fusion:Component).@class = 'Neos\\Fusion\\FusionObjects\\ComponentImplementation'
+prototype(Neos.Fusion:Value).@class = 'Neos\\Fusion\\FusionObjects\\ValueImplementation'
+prototype(Neos.Fusion:TestRenderer).@class = 'Neos\\Fusion\\Tests\\Functional\\View\\Fixtures\\TestRenderer'
+
+
+prototype(Neos.Fusion:Sandbox) < prototype(Neos.Fusion:Component) {
+  hello = null
+  world = null
+
+  renderer = ${props.hello + ' ' + props.world}
+}
+
+component.basicRenderer = Neos.Fusion:Component {
+  hello = 'Hello'
+  world = 'World'
+
+  renderer = ${props.hello + ' ' + props.world}
+}
+
+component.nestedRenderer = Neos.Fusion:Component {
+  hello = 'Hello'
+  world = 'World'
+
+  renderer = Neos.Fusion:Value {
+    value = ${props.hello + ' ' + props.world}
+  }
+}
+
+component.staticRenderer = Neos.Fusion:Component {
+  renderer = 'Hello World'
+}
+
+component.sandboxRenderer = Neos.Fusion:Component {
+  hello = 'Hello'
+  world = 'World'
+
+  renderer = Neos.Fusion:Value {
+    value = Neos.Fusion:Sandbox {
+      hello = ${props.hello}
+    }
+  }
+}
+
+component.lazyRenderer = Neos.Fusion:Component {
+  a = 'Hello'
+  // This prop is not evaluated, since it is not used - otherwise the test would fail
+  b = Neos.Fusion:NotImplemented
+
+  renderer = ${props.a}
+}
+
+component.wrapperRenderer = Neos.Fusion:Component {
+  title = 'Hello'
+
+  content = Neos.Fusion:Component {
+    renderer = Neos.Fusion:Case {
+      default {
+        @position = 'end'
+        condition = ${true}
+        renderer = 'Default content'
+      }
+    }
+  }
+
+  renderer = Neos.Fusion:Component {
+    // The wrapper pattern passes all props down to another component
+    @apply.props = ${props}
+
+    renderer = ${props.content}
+  }
+}

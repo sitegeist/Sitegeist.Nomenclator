@@ -1,0 +1,23 @@
+{
+    "name": "neos/error-messages",
+    "description": "Flow error messages",
+    "type": "library",
+    "homepage": "http://flow.neos.io",
+    "license": "MIT",
+    "require": {
+        "php": "^7.3 || ^8.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~9.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Neos\\Error\\Messages\\": "Classes"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Neos\\Error\\Messages\\Tests\\": "Tests"
+        }
+    }
+}

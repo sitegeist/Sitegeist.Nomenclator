@@ -1,0 +1,12 @@
+prototype(Neos.Fusion.Form:Select)  < prototype(Neos.Fusion.Form:Component.Field) {
+
+    renderer = afx`
+        <select
+            name={field.getName()}
+            multiple={field.isMultiple()}
+            {...props.attributes}
+        >
+            {props.content}
+        </select>
+    `
+}

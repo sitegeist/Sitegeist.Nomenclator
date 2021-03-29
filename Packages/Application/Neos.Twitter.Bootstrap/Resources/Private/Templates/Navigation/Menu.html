@@ -1,0 +1,14 @@
+<f:if condition="{items}">
+	<ul class="{menuClasses}">
+		<f:for each="{items}" as="item">
+			<f:if condition="{item.divider}">
+				<f:then>
+					<f:render partial="Navigation/Divider" />
+				</f:then>
+				<f:else>
+					<f:render partial="Navigation/MenuItem" arguments="{item: item}" />
+				</f:else>
+			</f:if>
+		</f:for>
+	</ul>
+</f:if>

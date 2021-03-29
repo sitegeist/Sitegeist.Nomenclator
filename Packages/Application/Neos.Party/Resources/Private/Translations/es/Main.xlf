@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="" product-name="Neos.Party" source-language="en" datatype="plaintext" target-language="es-ES">
+    <body>
+      <trans-unit id="personName.title" xml:space="preserve" approved="yes">
+				<source>Title</source>
+			<target state="final">Título</target></trans-unit>
+      <trans-unit id="personName.firstName" xml:space="preserve">
+				<source>First Name</source>
+			<target state="translated">Nombre</target></trans-unit>
+      <trans-unit id="personName.middleName" xml:space="preserve">
+				<source>Middle Name</source>
+			<target state="translated">Segundo nombre</target></trans-unit>
+      <trans-unit id="personName.lastName" xml:space="preserve">
+				<source>Last Name</source>
+			<target state="translated">Apellidos</target></trans-unit>
+      <trans-unit id="personName.otherName" xml:space="preserve">
+				<source>Other Name</source>
+			<target state="translated">Otro nombre</target></trans-unit>
+      <trans-unit id="electronicAddress.type" xml:space="preserve" approved="yes">
+				<source>Type</source>
+			<target state="final">Tipo</target></trans-unit>
+      <trans-unit id="electronicAddress.usage" xml:space="preserve">
+				<source>Usage</source>
+			<target state="translated">Uso</target></trans-unit>
+      <trans-unit id="electronicAddress.identifier" xml:space="preserve" approved="yes">
+				<source>Identifier</source>
+			<target state="final">Identificador</target></trans-unit>
+      <trans-unit id="electronicAddress.primary" xml:space="preserve">
+				<source>Primary</source>
+			<target state="translated">Primario</target></trans-unit>
+    </body>
+  </file>
+</xliff>

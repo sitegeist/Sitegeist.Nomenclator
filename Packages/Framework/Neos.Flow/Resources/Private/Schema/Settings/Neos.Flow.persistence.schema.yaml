@@ -1,0 +1,144 @@
+type: dictionary
+additionalProperties: false
+properties:
+  'backendOptions':
+    type: dictionary
+    required: true
+    properties:
+      'driver':
+        type: string
+        enum: [ 'pdo_mysql', 'pdo_sqlite', 'pdo_pgsql', 'pdo_oci', 'oci8', 'ibm_db2', 'pdo_ibm', 'pdo_sqlsrv', 'mysqli' ]
+      'host':
+        -
+          type: string
+          format: host-name
+        -
+          type: string
+          format: ip-address
+        -
+          type: 'null'
+      'charset': { type: string }
+      'dbname': { type: ['string','null'] }
+      'user': { type: ['string','null'] }
+      'password':  { type: ['string','null'] }
+      'path': { type: string }
+      'wrapperClass': { type: string, format: class-name }
+      'master':
+        type: dictionary
+        properties:
+          'host':
+            -
+              type: string
+              format: host-name
+            -
+              type: string
+              format: ip-address
+          'charset': { type: string }
+          'dbname': { type: string }
+          'user': { type: string }
+          'password':  { type: string }
+      'slaves':
+        type: dictionary
+        additionalProperties:
+          type: dictionary
+          additionalProperties: false
+          properties:
+            'host':
+              -
+                type: string
+                format: host-name
+              -
+                type: string
+                format: ip-address
+            'charset': { type: string }
+            'dbname': { type: string }
+            'user': { type: string }
+            'password':  { type: string }
+
+  'doctrine':
+    type: dictionary
+    required: true
+    additionalProperties: false
+    properties:
+      'enable': { type: boolean, required: true }
+      'sqlLogger': { type: [string, 'null'], required: true }
+      'eventSubscribers':
+        type: dictionary
+        additionalProperties: { type: string, format: class-name }
+      'eventListeners':
+        type: dictionary
+        additionalProperties:
+          type: dictionary
+          additionalProperties: false
+          properties:
+            'events': [{ type: array, items: { type: string } }, { type: string }]
+            'listener': { type: string, format: class-name }
+      'filters':
+        type: dictionary
+        additionalProperties:
+          type: string
+      'dql':
+        type: dictionary
+        required: false
+        additionalProperties: false
+        properties:
+          'customStringFunctions':
+            type: dictionary
+            patternProperties: { '/^[A-Za-z0-9_]+$/': { type: string, format: class-name } }
+            additionalProperties: false
+          'customNumericFunctions':
+            type: dictionary
+            patternProperties: { '/^[A-Za-z0-9_]+$/': { type: string, format: class-name } }
+            additionalProperties: false
+          'customDatetimeFunctions':
+            type: dictionary
+            patternProperties: { '/^[A-Za-z0-9_]+$/': { type: string, format: class-name } }
+            additionalProperties: false
+      'secondLevelCache':
+        type: dictionary
+        required: false
+        additionalProperties: false
+        properties:
+          'enabled': { type: boolean }
+          'defaultLifetime': { type: number }
+          'defaultLockLifetime': { type: number }
+          'regions':
+            type: dictionary
+            required: false
+            patternProperties: { '/.*/': { type: number } }
+      'dbal':
+        type: dictionary
+        required: false
+        additionalProperties: false
+        properties:
+          'mappingTypes':
+            type: dictionary
+            additionalProperties:
+              type: dictionary
+              additionalProperties: false
+              properties:
+                'dbType': { type: string, required: true }
+                'className': { type: string, format: class-name, required: true }
+      'migrations':
+        type: dictionary
+        additionalProperties: false
+        properties:
+          'ignoredTables':
+            type: dictionary
+            required: true
+            patternProperties: { '/.*/': { type: boolean } }
+          'generate':
+            type: dictionary
+            properties:
+              'defaultFilterExpression':
+                type:
+                  - { type: 'null' }
+                  - { type: string }
+      'cacheImplementation':
+        type:
+          - { type: 'null' }
+          - { type: string, format: class-name }
+
+  'cacheAllQueryResults':
+    type: boolean
+    required: true

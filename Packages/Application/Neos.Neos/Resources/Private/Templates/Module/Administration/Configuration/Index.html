@@ -1,0 +1,39 @@
+{namespace neos=Neos\Neos\ViewHelpers}
+<f:layout name="BackendSubModule" />
+
+<f:section name="content">
+	<f:for each="{availableConfigurationTypes}" as="availableConfigurationType">
+		<f:link.action
+			action="index"
+			arguments="{type: availableConfigurationType}"
+			class="neos-button{f:if(condition: '{availableConfigurationType} === {type}', then: ' neos-active')}">
+				{availableConfigurationType}
+		</f:link.action>
+	</f:for>
+	<f:if condition="{validationResult.flattenedErrors -> f:count()} > 0">
+		<ul id="neos-notifications-inline">
+			<li
+				data-type="warning"
+				data-title="{neos:backend.translate(id: 'numberValidationErrors', source: 'ValidationErrors', arguments: {0: '{validationResult.flattenedErrors-> f:count()}'}, value: '{validationResult.flattenedErrors -> f:count()} errors were found')}"
+			>
+				<f:for each="{validationResult.flattenedErrors}" key="path" as="errors">
+					<f:for each="{errors}" as="error">
+						<pre>
+							{path} -> {neos:backend.translate(id: error.code, source:
+							'ValidationErrors', package: 'Neos.Flow', arguments:
+							error.arguments, value: error)}
+						</pre>
+					</f:for>
+				</f:for>
+			</li>
+		</ul>
+	</f:if>
+	<br /><br />
+	<div id="configuration">
+		<ul class="neos-tree-container" data-type="{type}" >
+			<li class="folder">
+				<neos:backend.configurationTree configuration="{configuration}" />
+			</li>
+		</ul>
+	</div>
+</f:section>

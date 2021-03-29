@@ -1,0 +1,199 @@
+.neos-menu-button {
+  float: left;
+  width: $menuButtonWidth;
+  height: $unit;
+  background-color: $grayDark;
+
+  transition-property: top;
+  transition-duration: 0.2s;
+
+  &:hover,
+  &.neos-pressed {
+    background: transparent !important;
+
+    &:before {
+      border-top: 3px solid $blue;
+      border-bottom: 3px solid $blue;
+    }
+
+    &:after {
+      background-color: $blue;
+    }
+  }
+
+  &.neos-pressed {
+    height: $unit + 1px;
+  }
+
+  &:before {
+    display: block;
+    position: absolute;
+    left: $defaultMargin;
+    top: 12px;
+    width: 22px;
+    height: 3px;
+    border-top: 3px solid #fff;
+    border-bottom: 3px solid #fff;
+    content: '';
+  }
+
+  &:after {
+    display: block;
+    position: absolute;
+    left: $defaultMargin;
+    top: 24px;
+    width: 22px;
+    height: 3px;
+    background-color: #fff;
+    content: '';
+  }
+}
+
+.neos-menu {
+  .neos-menu-button {
+    outline: none;
+  }
+}
+
+.neos-menu-panel {
+  display: none;
+  position: fixed;
+  top: $unit;
+  bottom: 0;
+  left: -($menuWidth + 1px);
+  width: $menuWidth;
+  background-color: $grayDark;
+  z-index: 10020;
+  border-right: 1px solid $grayLight;
+  overflow-x: hidden;
+  overflow-y: auto;
+  transition-property: left, width;
+  transition-duration: 0.2s;
+  @include font;
+
+  .neos-menu-wrapper {
+    margin: 0;
+    padding: 0;
+  }
+
+  .neos-menu-panel-open & {
+    left: 0;
+    display: block;
+  }
+
+  &.neos-noscript {
+    top: 0;
+    left: 0;
+  }
+
+  & > .neos-menu-section:first-child .neos-menu-headline {
+    border: none;
+  }
+
+  a {
+    @include font;
+    color: #fff;
+    &:hover,
+    &:active {
+      color: $blue;
+      text-decoration: none;
+    }
+  }
+
+  .neos-menu-container {
+    height: 100%;
+  }
+
+  .neos-menu-section {
+    position: relative;
+
+    .neos-menu-section-header {
+      .neos-menu-panel-toggle {
+        position: absolute;
+        top: 0;
+        right: 0;
+        background-color: transparent;
+        outline: none;
+
+        &:hover {
+          i {
+            color: $blue;
+            text-decoration: none;
+          }
+        }
+      }
+    }
+
+    .neos-menu-section-content {
+      display: none;
+      opacity: 0;
+    }
+
+    &.neos-open {
+      .neos-menu-section-content {
+        display: block;
+        opacity: 1;
+        transition: opacity 0.25s ease-in;
+      }
+    }
+
+    .neos-menu-headline {
+      box-sizing: border-box;
+      padding-left: $menuButtonWidth;
+      height: $unit;
+      border-top: 1px solid $grayLight;
+      cursor: pointer;
+      line-height: $unit;
+      position: relative;
+    }
+
+    a,
+    span.neos-menu-item {
+      display: block;
+      @include font;
+      font-size: 14px;
+      font-weight: bold;
+      line-height: $unit;
+      height: $unit;
+      user-select: none;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      padding-left: 38px;
+      padding-right: $defaultMargin;
+
+      &:hover,
+      &.neos-active {
+        color: $blue;
+      }
+
+      &.neos-disabled {
+        color: $textSubtle;
+      }
+
+      i {
+        display: block;
+        position: absolute;
+        background-color: $grayDark;
+        top: 0;
+        left: 0;
+        width: $menuButtonWidth;
+        height: $unit;
+        font-size: 14px;
+        line-height: $unit;
+        vertical-align: middle;
+        text-align: center;
+        z-index: 10010;
+      }
+    }
+
+    .neos-menu-list {
+      a,
+      span.neos-menu-item {
+        padding-left: $menuButtonWidth;
+        position: relative;
+        font-weight: normal;
+      }
+    }
+  }
+}
