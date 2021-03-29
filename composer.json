@@ -3,7 +3,8 @@
     "type": "neos-package",
     "name": "sitegeist/nomenclator",
     "require": {
-        "neos/flow": "*"
+        "neos/flow": "*",
+        "sitegeist/lazybones": "^3.0"
     },
     "autoload": {
         "psr-4": {

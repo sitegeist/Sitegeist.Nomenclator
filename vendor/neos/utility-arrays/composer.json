@@ -1,0 +1,30 @@
+{
+  "name": "neos/utility-arrays",
+  "description": "Flow Array Utilities",
+  "type": "library",
+  "homepage": "http://flow.neos.io",
+  "license": "MIT",
+  "require": {
+    "php": "^7.3 || ^8.0",
+    "neos/utility-objecthandling": "*"
+  },
+  "require-dev": {
+    "mikey179/vfsstream": "^1.6.1",
+    "phpunit/phpunit": "~9.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Neos\\Utility\\": "Classes"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Neos\\Utility\\Arrays\\Tests\\": "Tests"
+    }
+  },
+  "extra": {
+    "neos": {
+      "package-key": "Neos.Utility.Arrays"
+    }
+  }
+}

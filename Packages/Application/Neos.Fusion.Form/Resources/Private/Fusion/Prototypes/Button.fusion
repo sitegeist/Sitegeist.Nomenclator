@@ -1,0 +1,14 @@
+prototype(Neos.Fusion.Form:Button) < prototype(Neos.Fusion.Form:Component.Field) {
+
+    attributes.type = 'submit'
+
+    renderer = afx`
+        <button
+            name={field.getName()}
+            value={field.getTargetValueStringified()}
+            {...props.attributes}
+        >
+            {props.content}
+        </button>
+    `
+}

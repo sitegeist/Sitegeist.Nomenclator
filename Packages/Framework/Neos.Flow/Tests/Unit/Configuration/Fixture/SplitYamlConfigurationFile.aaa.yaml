@@ -1,0 +1,5 @@
+configurationFileHasBeenLoaded: true
+Neos:
+  Flow:
+    something: 'aaa'
+    '@bar': 1

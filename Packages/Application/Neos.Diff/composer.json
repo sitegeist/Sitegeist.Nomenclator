@@ -1,0 +1,14 @@
+{
+  "name": "neos/diff",
+  "type": "neos-package",
+  "license": "BSD-3-Clause",
+  "description": "This is a comprehensive library for generating differences between two strings or arrays",
+  "require": {
+    "php": "^7.3"
+  },
+  "autoload": {
+    "psr-4": {
+      "Neos\\Diff\\": "Classes"
+    }
+  }
+}

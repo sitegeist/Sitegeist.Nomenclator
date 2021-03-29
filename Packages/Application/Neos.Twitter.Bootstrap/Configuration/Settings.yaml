@@ -1,0 +1,7 @@
+Neos:
+  Twitter:
+    Bootstrap:
+      viewHelpers:
+        partialRootPath: 'resource://Neos.Twitter.Bootstrap/Private/Partials/'
+        templates:
+          'Neos\Twitter\Bootstrap\ViewHelpers\Navigation\MenuViewHelper': 'resource://Neos.Twitter.Bootstrap/Private/Templates/Navigation/Menu.html'

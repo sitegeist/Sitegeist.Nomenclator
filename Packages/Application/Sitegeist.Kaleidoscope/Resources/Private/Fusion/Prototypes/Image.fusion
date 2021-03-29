@@ -1,0 +1,87 @@
+prototype(Sitegeist.Kaleidoscope:Image) < prototype(Neos.Fusion:Component) {
+
+    @styleguide {
+        props {
+            imageSource = Sitegeist.Kaleidoscope:DummyImageSource
+            alt = 'Elva dressed as a fairy'
+        }
+
+        propSets {
+            multires_array {
+                srcset = ${['1x', '1.5x', '2x']}
+            }
+
+            multires_string {
+                srcset = '1x, 1.5x, 2x'
+            }
+
+            multisize_array {
+                srcset = ${['320w', '400w', '600w', '800w', '1000w', '1200w', '1600']}
+            }
+
+            multisize_string {
+                srcset = '320w, 400ww, 600w, 800w, 1000w, 1200w, 1600'
+            }
+
+            sizes_array {
+                srcset = ${['320w', '400w', '600w', '800w', '1000w', '1200w', '1600']}
+                sizes = ${['(max-width: 320px) 280px', '(max-width: 480px) 440px', '800px']}
+            }
+
+            sizes_string {
+                srcset = '320w, 400ww, 600w, 800w, 1000w, 1200w, 1600'
+                sizes = '(max-width: 320px) 280px, (max-width: 480px) 440px, 800px'
+            }
+        }
+    }
+
+    @propTypes {
+        imageSource = ${PropTypes.instanceOf('\\Sitegeist\\Kaleidoscope\\EelHelpers\\ImageSourceHelperInterface')}
+    }
+
+    imageSource = null
+    srcset = null
+    sizes = null
+    alt = ''
+    title = null
+    class = null
+    loading = null
+    width = null
+    height = null
+    format = null
+    renderDimensionAttributes = true
+
+    renderer = Neos.Fusion:Component {
+        @if.hasImageSource = ${props.imageSource && Type.instance(props.imageSource, '\\Sitegeist\\Kaleidoscope\\EelHelpers\\ImageSourceHelperInterface')}
+
+        # apply format, width and height to the imageSource
+        imageSource = ${props.imageSource}
+        imageSource.@process.applyWidth = ${props.width ? value.setWidth(props.width) : value}
+        imageSource.@process.applyHeight = ${props.height ? value.setHeight(props.height) : value}
+        imageSource.@process.applyFormat = ${props.format ? value.setFormat(props.format) : value}
+
+        srcset = ${props.srcset}
+        sizes = ${props.sizes}
+        loading = ${props.loading}
+        alt =  ${props.alt}
+        title = ${props.title}
+        class = ${props.class}
+        renderDimensionAttributes = ${props.renderDimensionAttributes}
+
+        renderer = afx`
+            <img
+                src={props.imageSource.src()}
+                srcset={props.imageSource.srcset(props.srcset)}
+                srcset.@if.has={props.srcset}
+                sizes={props.sizes}
+                sizes.@process.join={Type.isArray(value) ? Array.join(value, ', ') : value}
+                loading={props.loading}
+                class={props.class}
+                alt={props.alt}
+                title={props.title}
+                width={props.renderDimensionAttributes ? props.imageSource.currentWidth : null}
+                height={props.renderDimensionAttributes ? props.imageSource.currentHeight : null}
+            />
+        `
+    }
+}

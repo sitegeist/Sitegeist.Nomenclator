@@ -1,0 +1,981 @@
+`7.0.0 (2020-12-10) <https://github.com/neos/neos-development-collection/releases/tag/7.0.0>`_
+==============================================================================================
+
+Overview of merged pull requests
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+`TASK: Remove old code migrations <https://github.com/neos/neos-development-collection/pull/3236>`_
+---------------------------------------------------------------------------------------------------
+
+Removes 38 code migrations that are not longer relevant
+
+* Packages: ``ContentRepository`` ``Fusion`` ``Media`` ``Neos`` ``NodeTypes`` ``SiteKickstarter``
+
+`BUGFIX: Add missing return tag for the flow query operation <https://github.com/neos/neos-development-collection/pull/3239>`_
+------------------------------------------------------------------------------------------------------------------------------
+
+Without this, the reference documentation can not be parsed. The Eel helper was not updated since version 4.3!!!
+
+* Packages: ``Neos``
+
+`DOCS: Add note about the read only state to the readme of fusion afx <https://github.com/neos/neos-development-collection/pull/3234>`_
+---------------------------------------------------------------------------------------------------------------------------------------
+
+* Packages: ``Afx``
+
+`TASK: Throw fusion exception with explanation also for afx parser errors <https://github.com/neos/neos-development-collection/pull/3235>`_
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+Previously only AfxExceptions were converted to fusion exceptions which hid valuable information about the error source from the user. This change will also catch for AfxParserExceptions and convert those to Fusion\\Exceptions
+
+This is non critical as the fusion side will catch this aswell but it should help to create error messages that are slightly easier to understand.
+
+This replaces pr: https://github.com/neos/fusion-afx/pull/35 after moving afx to the neos development collection
+
+* Packages: ``Afx``
+
+`TASK: Raise PHPUnit version to 9 <https://github.com/neos/neos-development-collection/pull/3233>`_
+---------------------------------------------------------------------------------------------------
+
+`TASK: Adjust version numbers in tooling configuration <https://github.com/neos/neos-development-collection/pull/3231>`_
+------------------------------------------------------------------------------------------------------------------------
+
+Updates for the 7.0 branch:
+
+- conf.py of neos/neos and neos/media
+- .travis.yml
+- apigen.yml
+
+* Packages: ``Media`` ``Neos``
+
+`TASK: Adjust phpunit version for Fusion.Afx <https://github.com/neos/neos-development-collection/pull/3232>`_
+--------------------------------------------------------------------------------------------------------------
+
+* Packages: ``Afx`` ``Neos`` ``SiteKickstarter``
+
+`TASK: Extend the warning for the EmberUI <https://github.com/neos/neos-development-collection/pull/3224>`_
+-----------------------------------------------------------------------------------------------------------
+
+The most parts of the EmberUI has been already removed. So we should mention that.
+
+Releates: #2531
+
+* Packages: ``Neos``
+
+`TASK: Remove aloha legacy information <https://github.com/neos/neos-development-collection/pull/3225>`_
+--------------------------------------------------------------------------------------------------------
+
+The aloha configuration is not working anymore as we removed that compatibility
+layer in the neos-ui. So we can also remove the information in the docs.
+
+The aloha editor served us well but now it is time to remove the last legacy pieces.
+
+Relates to https://github.com/neos/neos-ui/pull/2802
+
+* Packages: ``Neos``
+
+`TASK: Use PhpUnit 9 <https://github.com/neos/neos-development-collection/pull/3229>`_
+--------------------------------------------------------------------------------------
+
+* Related: `#3227 <https://github.com/neos/neos-development-collection/issues/3227>`_
+* Packages: ``Afx`` ``ContentRepository`` ``Fusion`` ``Neos``
+
+`FEATURE: Stabilize and extend Frontend Routing <https://github.com/neos/neos-development-collection/pull/3218>`_
+-----------------------------------------------------------------------------------------------------------------
+
+This adjusts the `FrontendNodeRoutePartHandler` so that it
+can more easily be used for custom routes:
+
+# Allow to be used in conjunction with other static/dynamic
+  route parts
+
+An `uriPattern` of "{node}/some/custom/part" did not work with
+the previous version since the `uriPath` was replaced completely
+when the route resolved a given node.
+
+# Allow custom routes to be filtered by node type.
+
+With the bug above fixed the route part handler can be used in
+custom routes, but it would work for all nodes.
+So for every `valid/uri` a corresponding `valid/uri/some/custom/part`
+would match to the same node.
+
+To prevent that, a new option `nodeType` was added that allows the
+route to only apply for nodes of the specified type:
+
+.. code-block:: yaml
+
+    -
+      name:  'Custom'
+      uriPattern: '{node}/custom.html'
+      defaults:
+        '@package':    'Neos.Neos'
+        '@controller': 'Frontend\\Node'
+        '@action':     'show'
+        '@format':     'html'
+        custom:         true
+      routeParts:
+        'node':
+          handler: 'Neos\\Neos\\Routing\\FrontendNodeRoutePartHandlerInterface'
+          options:
+            nodeType: 'Some.Package:Some.Node.Type'
+
+With this route (registered _before_ the default Neos routes) the
+URI `valid/uri/custom.html` would match the corresponding node only
+if it implements `Some.Package:Some.Node.Type`.
+
+The Fusion rendering can react to that by evaluating the `custom` request argument::
+
+    prototype(Some.Package:Some.Node.Type) < prototype(Neos.Fusion:Component) {
+        renderer = Neos.Fusion:Case {
+            custom {
+                condition = ${request.arguments.custom}
+                renderer = Some.Package:Some.Custom.Renderer
+            }
+            default {
+                condition = true
+                renderer = Some.Package:Some.Default.Renderer
+            }
+        }
+        @cache {
+            mode = 'dynamic'
+            entryDiscriminator = ${request.arguments.custom ? 'custom' : 'default'}
+            context {
+                1 = 'node'
+                2 = 'documentNode'
+                3 = 'site'
+            }
+        }
+    }
+
+Vice versa, to create a link using the custom route via Fusion::
+
+    link = Neos.Neos:NodeLink {
+      node = ${someNode}
+      arguments {
+        custom = true
+      }
+    }
+
+...will create a link pointing to the custom rendering of the node
+if `someNode` implements the configured node type.
+
+* Related: `#3020 <https://github.com/neos/neos-development-collection/issues/3020>`_
+* Packages: ``Neos``
+
+`BUGFIX: Adjust fusion tests to match the InvalidPositionException <https://github.com/neos/neos-development-collection/pull/3226>`_
+------------------------------------------------------------------------------------------------------------------------------------
+
+Invalid positions has been skipped silently. Since https://github.com/neos/flow-development-collection/pull/2214 this leads to an InvalidPositionException.
+
+This change adjusts the tests, so that the expected errors are also respected in the tests.
+
+Related: https://github.com/neos/flow-development-collection/pull/2214
+
+* Packages: ``Fusion`` ``Neos``
+
+`TASK: Removes unused semantic-release <https://github.com/neos/neos-development-collection/pull/3208>`_
+--------------------------------------------------------------------------------------------------------
+
+Removes dependency to the `semantic-release` npm package.
+
+Semantic-release has been added 2 years ago with the image variant change. But it was never used and as we need a changelog ruleset for Neos commit messages before we are able to use it we can just drop it.
+
+When we plan to use it we can add it again anyways.
+
+* Resolves: `#3209 <https://github.com/neos/neos-development-collection/issues/3209>`_
+* Packages: ``Browser``
+
+`FEATURE: Remove default prototype generator <https://github.com/neos/neos-development-collection/pull/3210>`_
+--------------------------------------------------------------------------------------------------------------
+
+Related to #3137
+
+* Packages: ``Neos``
+
+`TASK: Add new login wallpaper <https://github.com/neos/neos-development-collection/pull/3214>`_
+------------------------------------------------------------------------------------------------
+
+* Packages: ``Neos``
+
+`!!! FEATURE: Add getIconUri & getDescription to AssetSourceInterface <https://github.com/neos/neos-development-collection/pull/3211>`_
+---------------------------------------------------------------------------------------------------------------------------------------
+
+Extends the `Neos\\Media\\Domain\\Model\\AssetSource\\ AssetSourceInterface` by the two methods `getIconUri()` and `getDescription()`.
+
+This is a breaking change if you created a custom Asset source (implementing the `AssetSourceInterface`) and didn't implement these methods yet.
+
+Related to #3137
+
+* Packages: ``Media`` ``Neos``
+
+`TASK: Adjust deprecated notices for next release <https://github.com/neos/neos-development-collection/pull/3207>`_
+-------------------------------------------------------------------------------------------------------------------
+
+Related to #3137
+
+* Packages: ``Neos``
+
+`TASK: Include AFX in development collection <https://github.com/neos/neos-development-collection/pull/3205>`_
+--------------------------------------------------------------------------------------------------------------
+
+This merges the AFX repository as subtree of the development collection, additionally the splitter configuration will have to be adapted afterwards and the Neos.Fusion.AFX repository made read-only.
+
+`BUGFIX: set tagMode explicitly for tag links in Media.Browser <https://github.com/neos/neos-development-collection/pull/3197>`_
+--------------------------------------------------------------------------------------------------------------------------------
+
+Add `tagMode: 0` to tag links rendered in Media.Browser.
+
+* Fixes: `#3196 <https://github.com/neos/neos-development-collection/issues/3196>`_
+* Packages: ``Browser`` ``Neos``
+
+`BUGFIX: set tagMode explicitly for tag links in Media.Browser <https://github.com/neos/neos-development-collection/pull/3197>`_
+--------------------------------------------------------------------------------------------------------------------------------
+
+Add `tagMode: 0` to tag links rendered in Media.Browser.
+
+* Fixes: `#3196 <https://github.com/neos/neos-development-collection/issues/3196>`_
+* Packages: ``Browser`` ``Neos``
+
+`BUGFIX: Respect already defined attributes in Neos.Neos:ConvertUris <https://github.com/neos/neos-development-collection/pull/3152>`_
+--------------------------------------------------------------------------------------------------------------------------------------
+
+* The `rel` value get merged with existent`rel` attributes
+* If a value already exists, it will not get overridden. Example `<a href="https://external.site" target="external">` the target stays `external`
+* When you set the external target to something different (e.g. `'external'`) or disable it with false, the `rel` attribute will still be set
+* If you have `data-target` set, this will not be overwritten
+
+* Fixes: `#2942 <https://github.com/neos/neos-development-collection/issues/2942>`_
+* Packages: ``Neos``
+
+`BUGFIX: Respect already defined attributes in Neos.Neos:ConvertUris <https://github.com/neos/neos-development-collection/pull/3152>`_
+--------------------------------------------------------------------------------------------------------------------------------------
+
+* The `rel` value get merged with existent`rel` attributes
+* If a value already exists, it will not get overridden. Example `<a href="https://external.site" target="external">` the target stays `external`
+* When you set the external target to something different (e.g. `'external'`) or disable it with false, the `rel` attribute will still be set
+* If you have `data-target` set, this will not be overwritten
+
+* Fixes: `#2942 <https://github.com/neos/neos-development-collection/issues/2942>`_
+* Packages: ``Neos``
+
+`BUGFIX: Add file and line information to fusion parser exceptions where possible <https://github.com/neos/neos-development-collection/pull/3204>`_
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+In many cases the currently parsed resource and line is known and it would help to
+editors to show this information in the parser exception.
+
+* Resolves: `#3206 <https://github.com/neos/neos-development-collection/issues/3206>`_
+* Packages: ``Browser`` ``Fusion`` ``Neos``
+
+`TASK: Rename TYPO3CR where possible <https://github.com/neos/neos-development-collection/pull/3188>`_
+------------------------------------------------------------------------------------------------------
+
+Affects #2842 and #3137
+
+* Packages: ``ContentRepository`` ``Fusion`` ``Neos`` ``NodeTypes``
+
+`BUGFIX: Align fusion caching and service <https://github.com/neos/neos-development-collection/pull/3193>`_
+-----------------------------------------------------------------------------------------------------------
+
+* Fixes: `#3191 <https://github.com/neos/neos-development-collection/issues/3191>`_
+* Packages: ``Neos``
+
+`FEATURE: Replace Fusion:Collection with Fusion:Loop <https://github.com/neos/neos-development-collection/pull/3202>`_
+----------------------------------------------------------------------------------------------------------------------
+
+* Related: `#3137 <https://github.com/neos/neos-development-collection/issues/3137>`_
+* Packages: ``ColumnLayouts`` ``ContentReferences`` ``Neos``
+
+`FEATURE: Replace Neos.Fusion:Array with Neos.Fusion:Join <https://github.com/neos/neos-development-collection/pull/3198>`_
+---------------------------------------------------------------------------------------------------------------------------
+
+* Related: `#3137 <https://github.com/neos/neos-development-collection/issues/3137>`_
+* Packages: ``Fusion``
+
+`FEATURE: Replace test function names to map prototype name in Map test <https://github.com/neos/neos-development-collection/pull/3203>`_
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+* Related: `#3137 <https://github.com/neos/neos-development-collection/issues/3137>`_
+* Packages: ``Fusion``
+
+`TASK: Adjust Node and NodeInterface deprecation annotations <https://github.com/neos/neos-development-collection/pull/3194>`_
+------------------------------------------------------------------------------------------------------------------------------
+
+* Reword the deprecation message in the interface doc comment
+* For deprecated methods with a replacement (e.g. `getDepth()`):
+  * Don't remove the method but keep the deprecation annotation
+  * Remove any `@api` annotation from the method
+* For deprecated methods without replacement (e.g. `getContextPath()`):
+  * Don't remove the method
+  * replace the `@deprecated` annotation by some comment
+
+* Related: `#3137 <https://github.com/neos/neos-development-collection/issues/3137>`_
+* Packages: ``ContentRepository`` ``Neos``
+
+`FEATURE: Replace RawArray with DataStructure <https://github.com/neos/neos-development-collection/pull/3200>`_
+---------------------------------------------------------------------------------------------------------------
+
+#3137
+
+* Packages: ``Fusion`` ``Neos``
+
+`FEATURE: Replace TS in comments with Fusion <https://github.com/neos/neos-development-collection/pull/3201>`_
+--------------------------------------------------------------------------------------------------------------
+
+#3137
+
+* Packages: ``Fusion`` ``Neos``
+
+`Fix doc comments in Node and NodeInterface <https://github.com/neos/neos-development-collection/pull/3195>`_
+-------------------------------------------------------------------------------------------------------------
+
+Tweaks some doc comments that were introduced with #3187 and referred to a non-existing class `TraversableNode`
+
+* Packages: ``ContentRepository``
+
+`TASK: Adjust Node and NodeInterface deprecation annotations <https://github.com/neos/neos-development-collection/pull/3187>`_
+------------------------------------------------------------------------------------------------------------------------------
+
+* Reword the deprecation message in the interface doc comment
+* For deprecated methods with a replacement (e.g. `getDepth()`):
+  * Don't remove the method but keep the deprecation annotation
+  * Remove any `@api` annotation from the method
+* For deprecated methods without replacement (e.g. `getContextPath()`):
+  * Don't remove the method
+  * replace the `@deprecated` annotation by some comment
+
+* Related: `#3137 <https://github.com/neos/neos-development-collection/issues/3137>`_
+* Packages: ``Browser`` ``ContentRepository``
+
+`TASK: Unify indents to spaces in fusion files <https://github.com/neos/neos-development-collection/pull/3186>`_
+----------------------------------------------------------------------------------------------------------------
+
+Currently, we have a kind of a mess in the different fusion files. Sometimes we use spaces, sometimes tabs. This PR clean this up.
+
+* Packages: ``Fusion``
+
+`BUGFIX: Use autorotate filter to apply resize adjustments properly to images with exif-orientations <https://github.com/neos/neos-development-collection/pull/3147>`_
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+The autorotate is applied before calculating the resize dimensions to work with correct size values.
+
+How to test:
+- Go to the media module
+- Upload an image with exif orientation like https://github.com/recurser/exif-orientation-examples/blob/master/Landscape_6.jpg
+- Look at the generated thumbnails (without this change the thumbnail is rotated 90°)
+
+* Resolves: `#3148 <https://github.com/neos/neos-development-collection/issues/3148>`_
+* Packages: ``Media``
+
+`BUGFIX: Flush 1st level node caches after publishing <https://github.com/neos/neos-development-collection/pull/3174>`_
+-----------------------------------------------------------------------------------------------------------------------
+
+When a fresh variant is published outdated URLs may be generated if
+the urlPathSegment was changed on the variant.
+
+* Fixes: `#3173 <https://github.com/neos/neos-development-collection/issues/3173>`_
+* Packages: ``Browser`` ``ContentRepository``
+
+`BUGFIX: Adjust NodeIdentityConverterAspect to typed persistence <https://github.com/neos/neos-development-collection/pull/3183>`_
+----------------------------------------------------------------------------------------------------------------------------------
+
+* Fixes: `#3181 <https://github.com/neos/neos-development-collection/issues/3181>`_
+
+`TASK: Adjust to removal of ComponentContext <https://github.com/neos/neos-development-collection/pull/3175>`_
+--------------------------------------------------------------------------------------------------------------
+
+This removes all usages of `ComponentContext`.
+
+Related: neos/flow-development-collection#2019
+
+`TASK: Update gedmo/doctrine-extensions to 3.0 <https://github.com/neos/neos-development-collection/pull/3179>`_
+----------------------------------------------------------------------------------------------------------------
+
+depends on #3177
+Related to neos/flow-development-collection#2122
+Required for neos/flow-development-collection#2247 et.al.
+
+`TASK: Remove use of resolveShortcuts argument <https://github.com/neos/neos-development-collection/pull/3182>`_
+----------------------------------------------------------------------------------------------------------------
+
+The LinkingService.createNodeUri() no longer uses/accepts this
+parameter…
+
+See https://github.com/neos/neos-development-collection/pull/3168
+
+* Packages: ``Neos``
+
+`!!! TASK: Adjust to doctrine/migrations v3 <https://github.com/neos/neos-development-collection/pull/3177>`_
+-------------------------------------------------------------------------------------------------------------
+
+* Packages: ``Media`` ``Neos``
+
+`BUGFIX: Adjust to typed persistence code <https://github.com/neos/neos-development-collection/pull/3180>`_
+-----------------------------------------------------------------------------------------------------------
+
+See https://github.com/neos/flow-development-collection/issues/2231
+
+* Packages: ``ContentRepository`` ``Media`` ``Neos``
+
+`TASK: Apply migrations <https://github.com/neos/neos-development-collection/pull/3176>`_
+-----------------------------------------------------------------------------------------
+
+Apply core migrations to (some) Neos dev collection packages.
+
+* Packages: ``ContentRepository``
+
+`BUGFIX: Correct bug in migration of ContentCollectionConstraints <https://github.com/neos/neos-development-collection/pull/3178>`_
+-----------------------------------------------------------------------------------------------------------------------------------
+
+The adjustments were applied to all nodes with constraints because the existence of the superType "Neos.Neos:ContentCollection" was not properly checked.
+
+The fixed migration was introduced in #3163
+
+* Packages: ``Browser`` ``Neos``
+
+`!!! TASK: Raise minimum PHP version to 7.3 <https://github.com/neos/neos-development-collection/pull/3172>`_
+-------------------------------------------------------------------------------------------------------------
+
+See https://github.com/neos/flow-development-collection/issues/2236
+
+* Packages: ``Neos``
+
+`TASK: Remove PHP 7.2 builds <https://github.com/neos/neos-development-collection/pull/3171>`_
+----------------------------------------------------------------------------------------------
+
+See https://github.com/neos/flow-development-collection/issues/2236
+
+* Packages: ``Neos``
+
+`BUGFIX: set collection mode explicitly for custom collection links <https://github.com/neos/neos-development-collection/pull/3162>`_
+-------------------------------------------------------------------------------------------------------------------------------------
+
+**What I did**
+I set the collection mode explicitly to 0 to correct the argument in the url for switching to a custom collection. This Fixes Issue https://github.com/neos/neos-development-collection/issues/3161
+**How I did it**
+I adjusted the arguments in the link generation in the template for the index action.
+
+
+* Packages: ``Browser``
+
+`BUGFIX: Fix Compatibility fallback after switching from Neos.Fusion:Collection to Neos.Fusion:Loop <https://github.com/neos/neos-development-collection/pull/3170>`_
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Close: #3169
+
+* Packages: ``Neos``
+
+`BUGFIX: Fix Compatibility fallback after switching from Neos.Fusion:Collection to Neos.Fusion:Loop <https://github.com/neos/neos-development-collection/pull/3170>`_
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Close: #3169
+
+* Packages: ``Neos``
+
+`!!! FEATURE: Add Afx template for SiteKickstarter <https://github.com/neos/neos-development-collection/pull/3089>`_
+--------------------------------------------------------------------------------------------------------------------
+
+This is the first approach for making the SiteKickstarter more versatile. Now you can easily add a custom generator package and kickstart some sorts of sites with one package.
+
+* Add possibility to use more than one template for the site kickstarter
+* Add Afx template in addition to the fluid template
+* Add the generator selection to the backend module for site packages
+* Removed the old generic generator service (this is breaking)
+
+This is a breaking change because it removes the old, Fluid-based generator service.
+In case you want to use the Fluid based rendering you can use the dedicated package at https://github.com/queoGmbH/FluidSiteGenerator
+
+* Resolves: `#3074 <https://github.com/neos/neos-development-collection/issues/3074>`_
+
+`!!! FEATURE: Faster frontend routing <https://github.com/neos/neos-development-collection/pull/3168>`_
+-------------------------------------------------------------------------------------------------------
+
+Moves most of the "expensive" logic from the `LinkingService` to the
+`FrontendNodeRoutePartHandler` where it will be cached.
+
+This leads to a great performance improvement because:
+* The "current Site" is only determined once, not for every URI
+* Previously we had *three* routes for the frontend, now it's
+  a single one
+* Shortcut resolution will happen in the handler, so it will
+  be cached
+
+Most of these performance improvements even hold true for uncached requests.
+
+Breaking Change
++++++++++++++++
+
+This might be a breaking change if you...:
+* ...extend the `FrontendNodeRoutePartHandler` and rely on it's inner workings (for example
+  with shortcut nodes¹).
+  No methods were removed though, so chances are that you are not affected
+* ...created (functional) tests that cover the Neos routing behavior.
+  The `FrontendNodeRoutePartHandler` expects the `requestUriHost` routing
+  parameter to be set (usually done via HTTP Middleware). You can simulate that behavior via:
+  `$httpRequest = $httpRequest->withAttribute(ServerRequestAttributes::ROUTING_PARAMETERS, RouteParameters::createEmpty()->withParameter('requestUriHost', 'some-host'));`
+* ...rely on the *internal* behavior of the `resolveShortcuts` argument of the `LinkingService`
+  This is quite unlikely since we don't use that route part handler for the
+  backend, where shortcut nodes are never resolved anyways.
+
+---
+¹ The Node instance passed to `resolveValue()` will no longer be the *target node* of a shortcut
+  but the actual shortcut node itself. It is resolved to the target node/URI via `resolveShortcutNode()`.
+  This method is `protected` so that it can be called from any subclass if needed.
+
+* Related: `#3020 <https://github.com/neos/neos-development-collection/issues/3020>`_
+* Packages: ``Neos``
+
+`!!! FEATURE: Respect language plurals also in XliffService <https://github.com/neos/neos-development-collection/pull/3166>`_
+-----------------------------------------------------------------------------------------------------------------------------
+
+The neos-ui can not use language plurals as the UI only uses the xliff.json endpoint and the XliffService that creates the JSON returns only the singular. This change adds the plurals when they are available.
+
+**What I did**
+
+The XliffService always returned the first value of a translation unit. So even when a label has a plural the XliffService only used the singular. So I changed that and we are respecting now plural and singular.
+
+**How I did it**
+
+Added a new method getTranslationUnitValue that iterates over the translation unit values and potentially scramble the singular and plural. When we have just a singular we just use the single value for the label. If we have singular and plural we use the whole array for the label key.
+
+* Resolves: `#2786 <https://github.com/neos/neos-development-collection/issues/2786>`_
+* Packages: ``Neos``
+
+`TASK: Add migration to adjust constraints of \`Neos.Neos:ContentCollections\` <https://github.com/neos/neos-development-collection/pull/3163>`_
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+In PR #2715 the constraints in the `Neos.Neos:ContentCollection` were altered from allow `*` and disallow `Neos.Neos:Document` to disallow `*` and allowing `Neos.Neos:Content`.
+
+This change adds an automatic migration to alter NodeTypes that are derived from `Neos.Neos:ContentCollection` and constraints of childNodes that are of type `Neos.Neos:ContentCollection`.
+
+The migration will replace constraints for `*` with constraints for `Neos.Neos:Content` while preserving order.
+
+Limitations: This will not run on nodeTypes that indirectly inherit from `Neos.Neos:ContentCollection` and `childNodes`
+that are of a derived ContentCollection nodeType. However i consider such cases exotic and hope this catches 99% of the cases.
+
+* Resolves: `#3164 <https://github.com/neos/neos-development-collection/issues/3164>`_
+* Packages: ``Neos``
+
+`TASK: Apply core migrations for Neos.ContentRepository <https://github.com/neos/neos-development-collection/pull/3167>`_
+-------------------------------------------------------------------------------------------------------------------------
+
+The core migrations are not stored in the database anymore and therefore our travis tests are failing.
+
+**What I did**
+Applied core migrations for Neos.ContentRepository
+
+* Packages: ``ContentRepository``
+
+`FEATURE: Lazy loading images <https://github.com/neos/neos-development-collection/pull/3149>`_
+-----------------------------------------------------------------------------------------------
+
+This will solve issue #3084
+
+* Packages: ``NodeTypes``
+
+`Apply fixes from StyleCI <https://github.com/neos/neos-development-collection/pull/3160>`_
+-------------------------------------------------------------------------------------------
+
+This pull request applies code style fixes from an analysis carried out by `StyleCI <https://github.styleci.io>`_.
+
+For more information, click `here <https://github.styleci.io/analyses/PxlLxK>`_.
+
+* Packages: ``Browser`` ``ContentRepository`` ``Neos``
+
+`FEATURE: Add StaticResource helper to Fusion defaults <https://github.com/neos/neos-development-collection/pull/3134>`_
+------------------------------------------------------------------------------------------------------------------------
+
+Add the StaticResource EEL Helper from https://github.com/neos/flow-development-collection/pull/2174 to the Fusion defaultContext.
+
+StaticResource.uri (packageKey, pathAndFilename, localize)
+- (string) packageKey
+- (string) pathAndFilename
+- (boolean, optional) localize = false
+
+StaticResource.content (packageKey, pathAndFilename, localize)
+- (string) packageKey
+- (string) pathAndFilename
+- (boolean, optional) localize = false
+
+This makes this helper available in afx::
+
+  <link rel="stylesheet" href={StaticResource.uri('Neos.Demo', 'Public/Styles/Main.css')} media="all" />
+
+  <style>{StaticResource.content('Neos.Demo', 'Public/Styles/Main.css')}</style>
+
+* Resolves: `#3133 <https://github.com/neos/neos-development-collection/issues/3133>`_
+* Packages: ``Fusion``
+
+`FEATURE: Introduce NodeTypePresetPostprocessor <https://github.com/neos/neos-development-collection/pull/3087>`_
+-----------------------------------------------------------------------------------------------------------------
+
+Introduce `NodeTypePresetPostprocessor` and extract `IconNameMappingPostprocessor` and `DefaultPropertyEditorPostprocessor` from `NodeTypeConfigurationEnrichmentAspect`.
+
+This allows to configure nodeType presets via settings and apply them to nodeTypes via. Other than mixins this allows to ensure consistent configurations across differently named properties to ensure a consistent editor experience.
+
+Note: This is mainly a core adaptation of the Sitegeist.Silhoettes package https://github.com/sitegeist/Sitegeist.Silhouettes.
+
+The presets can be applied by definining the `options.preset` for childNodes or properties.
+
+.. code-block:: yaml
+
+    Neos:
+      Neos:
+        nodeTypes:
+
+          presets:
+
+            childNodes:
+              vendor:
+                defaultConstraints:
+                  constraints:
+                    'Neos.Neos:Content': true
+                    'Neos.NodeTypes.BaseMixins:TitleMixin': true
+
+            properties:
+              vendor:
+                textBlock:
+                  type: string
+                  ui:
+                    inlineEditable
+                type: string
+                defaultValue: ''
+                ui:
+                  inlineEditable: true
+                  inline:
+                    editorOptions:
+                      placeholder: 'Vendor.Site:NodeTypes.Generic:text.placeholder'
+                      autoparagraph: true
+                      formatting:
+                        strong: true
+                        em: true
+                        u: false
+                        underline: false
+
+Presets can then be applied to nodetypes via:
+
+.. code-block:: yaml
+
+    'Vendor.Package:NodeTypeName':
+      childNodes:
+        column1:
+          options:
+            preset: 'vendor.defaultConstraints'
+        column2:
+          options:
+            preset: 'vendor.defaultConstraints'
+      properties:
+        description:
+          options:
+            preset: 'vendor.textBlock'
+
+* Resolves: `#3090 <https://github.com/neos/neos-development-collection/issues/3090>`_
+
+This also solves two thirds of #2867  (get rid of NodeTypeConfigurationEnrichmentAspect). The last part cannot be extracted that easily as it converts the magic value `i18n` to a key built from the NodeType it was defined on.
+
+* Packages: ``Neos``
+
+`!!!TASK: Adjust constraints of \`Neos.Neos:ContentCollection\` to allow \`Content\` instead of denying \`Document\` <https://github.com/neos/neos-development-collection/pull/2715>`_
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+A ContentCollection did allow all children but Documents in the past which is unexpected and makes it needlessly harder to create derived nodetypes with custom constraints.
+
+This constraint is now adjusted to allow nodes of `Neos.Neos:Content` inside a `Neos.Neos:ContentCollection` as anyone would expect given the nodetype name.
+
+Additionally the test fixtures are adjusted as in one test a `ContentCollection` was moved into another. Now the respective node has a type that inherits from Content and ContentCollection.
+
+**How to update:**  If you created NodeTypes derived from `Neos.Neos:ContentCollection` and altered the constraints to forbid `*`  you have to adjust the constraints and now forbid `Neos.Neos:Content` instead of `*`:
+
+.. code-block:: yaml
+
+    'Vendor.Site:ContentCollection':
+      superTypes:
+        'Neos.Neos:ContentCollection': true
+      constraints:
+        nodeTypes:
+          // remove constraints like:
+          // '*': false
+          // and add the following instead
+          'Neos.Neos:Content': false
+          // everything else stays the same
+          'Vendor.Site:Content': true
+
+* Resolves: `#3119 <https://github.com/neos/neos-development-collection/issues/3119>`_
+* Packages: ``Neos``
+
+`TASK: Remove unused legacy UI setting <https://github.com/neos/neos-development-collection/pull/3130>`_
+--------------------------------------------------------------------------------------------------------
+
+Part of #3137
+
+* Packages: ``Neos``
+
+`FEATURE: Allow users to log in without access to the content module <https://github.com/neos/neos-development-collection/pull/3123>`_
+--------------------------------------------------------------------------------------------------------------------------------------
+
+Before, it was not possible to log in to the Neos backend without having access to the content module, as the user was automatically redirected to the content module.
+
+With this feature, an available module is determined when a user logs in and the user is redirected to that module.
+
+# High level features
+
+- Users no longer need to have access to the content module to be able to log in
+- There is a setting `Neos.Neos.moduleConfiguration.preferredStartModules` available to define the preferred start modules. The first module of that list, which a user has access to is chosen for the start module. If none of the listed modules can be accessed, the first module of the list of accessible modules of a user is chosen:
+- The backend modules and sub modules can now be sorted using the positional array sorter
+
+.. code-block:: yaml
+
+    Neos:
+      Neos:
+        moduleConfiguration:
+          preferredStartModules: [ 'content', 'user/usersettings' ]
+
+## Details
+
+- A user who has no access to the content module is redirected to the first (preferred) accessible content module
+- A user who has access to the content module is still redirected to the content module by default
+- A user without access to the content module does not see the available sites menu
+- When the `preferredStartModule` is not `content`, the content module is still selectable
+
+# Update notes
+
+- This removes `Neos.Neos.userInterface.routeAfterLogin`, it can be dropped from custom configuration
+
+* Resolves: `#2351 <https://github.com/neos/neos-development-collection/issues/2351>`_
+* Depends on: https://github.com/neos/neos-ui/pull/2793
+* Packages: ``Neos``
+
+`BUGFIX: Fix LinkingService for CLI mode <https://github.com/neos/neos-development-collection/pull/3129>`_
+----------------------------------------------------------------------------------------------------------
+
+Specifies the HTTP request from the ControllerContext as
+fallback for the `BaseUriProvider` in order to prevent an
+exception when trying to create Node URIs on the CLI.
+
+Note: This requires https://github.com/neos/flow-development-collection/pull/2158
+
+* Fixes: `#3128 <https://github.com/neos/neos-development-collection/issues/3128>`_
+* Related: https://github.com/neos/flow-development-collection/issues/2084
+* Packages: ``Neos``
+
+`TASK: Remove unused backend content container <https://github.com/neos/neos-development-collection/pull/3127>`_
+----------------------------------------------------------------------------------------------------------------
+
+The view helper and the "corresponding" template seems
+not to be used anywhere in the core anymore
+
+* Packages: ``BaseMixins`` ``Neos``
+
+`BUGFIX: Require jQuery Version 3.5.1 <https://github.com/neos/neos-development-collection/pull/3126>`_
+-------------------------------------------------------------------------------------------------------
+
+After the https://github.com/neos/neos-development-collection/pull/3023 the image selector in the backend was broken.
+
+* Packages: ``Browser``
+
+`TASK: Code cleanup in backend login area <https://github.com/neos/neos-development-collection/pull/3122>`_
+-----------------------------------------------------------------------------------------------------------
+
+Code cleanup and method typing in preparation of #2351
+No functional changes.
+
+* Packages: ``Neos``
+
+`!!! TASK: Remove the backend menu API controller <https://github.com/neos/neos-development-collection/pull/3125>`_
+-------------------------------------------------------------------------------------------------------------------
+
+Seems as this is a leftover of the old UI and is not used anywhere
+in the current code.
+
+* Packages: ``Browser`` ``Neos``
+
+`TASK: Apply fixes from StyleCI <https://github.com/neos/neos-development-collection/pull/3106>`_
+-------------------------------------------------------------------------------------------------
+
+This pull request applies code style fixes from an analysis carried out by `StyleCI <https://github.styleci.io>`_.
+
+For more information, click `here <https://github.styleci.io/analyses/RvbyGK>`_.
+
+`TASK: Apply fixes from StyleCI <https://github.com/neos/neos-development-collection/pull/3107>`_
+-------------------------------------------------------------------------------------------------
+
+This pull request applies code style fixes from an analysis carried out by `StyleCI <https://github.styleci.io>`_.
+
+For more information, click `here <https://github.styleci.io/analyses/4xEKGe>`_.
+
+* Packages: ``Browser`` ``ContentRepository`` ``Diff`` ``Fusion`` ``Media`` ``Neos``
+
+`FEATURE: Use breadcrumb for URL preview <https://github.com/neos/neos-development-collection/pull/3100>`_
+----------------------------------------------------------------------------------------------------------
+
+This replaces the (preview) URL by a "breadcrumb" to the homepage node.
+
+Essentially applies https://github.com/neos/neos-development-collection/pull/2966
+to the 4.3 branch, since the breadcrumb is a lot more user-friendly than the
+URL.
+
+* Packages: ``Neos``
+
+`BUGFIX: Migrate icons from TYPO3.Media to Neos.Media <https://github.com/neos/neos-development-collection/pull/3101>`_
+-----------------------------------------------------------------------------------------------------------------------
+
+* Fixes: `#2341 <https://github.com/neos/neos-development-collection/issues/2341>`_
+* Packages: ``Media``
+
+`TASK: Add new login wallpaper for Neos 5.3 <https://github.com/neos/neos-development-collection/pull/3105>`_
+-------------------------------------------------------------------------------------------------------------
+
+* Packages: ``Media`` ``Neos``
+
+`BUGFIX: Correctly set apply values for instantiated array objects <https://github.com/neos/neos-development-collection/pull/3103>`_
+------------------------------------------------------------------------------------------------------------------------------------
+
+With the introduction of lazy evaluation the apply values are stored as
+an array of (absolute) paths and popped accordingly to the evaluation
+stack. When an object is instantiated only the effective apply values
+for this object must be set (and not all currently set apply values).
+
+* Fixes: `#3003 <https://github.com/neos/neos-development-collection/issues/3003>`_
+* Packages: ``Fusion`` ``Media`` ``Neos``
+
+`FEATURE: third parameter "sortFlags" for FlowQuery sort() <https://github.com/neos/neos-development-collection/pull/2989>`_
+----------------------------------------------------------------------------------------------------------------------------
+
+On enabling Psmb/FlatNav I stumbled over the FlowQuery sort operation having the demand for case insensitive sort.
+
+Here's the solution: a third optional `sort()` parameter for sortOptions.
+
+The FlowQuery `sort()` is executed utilizing PHP `arsort()`. According to the sort flags of `arsort()` (see `https://www.php.net/manual/en/function.sort <https://www.php.net/manual/en/function.sort>`_) the sort options are:
+
+- `SORT_REGULAR`
+- `SORT_NUMERIC`
+- `SORT_STRING`
+- `SORT_LOCALE_STRING`
+- `SORT_NATURAL`
+- `SORT_FLAG_CASE` (use as last option with SORT_STRING, SORT_LOCALE_STRING or SORT_NATURAL)
+
+A single sort option can be supplied as string. Multiple sort options are supplied as array.
+
+Other than the above listed sort options shall throw an error.
+
+Omitting the third parameter leaves FlowQuery `sort()` in `SORT_REGULAR` sort mode.
+
+How to use (example for Psmb/FlatNav) in `Settings.yaml`:
+
+.. code-block:: yaml
+
+      frontendConfiguration:
+        Psmb_FlatNav:
+          presets:
+            tree:
+              type: tree
+              label: tree
+              icon: tree
+            pressTags:
+              label: 'Press Tags'
+              icon: icon-hashtag
+              type: flat
+              query: 'q(node).find("[instanceof My.Site:Document.PressTag]").sort("title", "ASC", ["SORT_NATURAL", "SORT_FLAG_CASE"]).get()'
+              ...
+            numberTags:
+              label: 'Number Tags'
+              icon: arrow-circle-up
+              type: flat
+              query: 'q(node).find("[instanceof My.Site:Document.NumberTag]").sort("title", "ASC", "SORT_NUMERIC").get()'
+              ...
+
+In the line `query:` of `pressTags:` you can see FlowQuery `sort()`in action::
+
+    sort("title", "ASC", ["SORT_NATURAL", "SORT_FLAG_CASE"])
+
+with sort flags `["SORT_NATURAL", "SORT_FLAG_CASE"]` passed as array for natural, case insensitive sort.
+
+The line `query:`of `numberTags:` has a single sort option `"SORT_NUMERIC"` passed as string::
+
+    sort("title", "ASC", "SORT_NUMERIC")
+
+* Packages: ``Neos``
+
+`BUGFIX: TransientNodeCache must be able to return null <https://github.com/neos/neos-development-collection/pull/3097>`_
+-------------------------------------------------------------------------------------------------------------------------
+
+This is an important bugfix because right now non existing nodes will result in a fatal error
+due to the type hint, when the $getter() actually doesn't resolve a node but null, which can happen.
+The current behavior is therefore broken for many installations.
+
+Relate #2301
+
+* Packages: ``ContentRepository`` ``Neos``
+
+`BUGFIX: Migrate media browser icons <https://github.com/neos/neos-development-collection/pull/3091>`_
+------------------------------------------------------------------------------------------------------
+
+In Neos prior to 4.1, the media browser uses PNG resources to show thumbnails for non graphical documents from `…/Public/Icons/`, like `ppt.png`. In 4.1 the PNG ressources were removed and replaced by SVG resources from `…/Resources/Public/IconSets/vivid/`. When you add new files after the upgrade, the valid SVG resources are used, but old assets still refer to their old resources, which are missing. As a result, the media browser shows the rotating “loading” icon for these old documents.
+
+This adds Doctrine migrations to replace the old with the  new icons in the database.
+
+* Fixes: `#2341 <https://github.com/neos/neos-development-collection/issues/2341>`_
+* Packages: ``Media``
+
+`TASK: Bump elliptic from 6.5.0 to 6.5.3 in /Neos.Neos <https://github.com/neos/neos-development-collection/pull/3024>`_
+------------------------------------------------------------------------------------------------------------------------
+
+Bumps `elliptic <https://github.com/indutny/elliptic>`_ from 6.5.0 to 6.5.3.
+
+* Packages: ``Neos``
+
+`TASK: Bump jquery from 3.4.1 to 3.5.0 in /Neos.Neos <https://github.com/neos/neos-development-collection/pull/3023>`_
+----------------------------------------------------------------------------------------------------------------------
+
+Bumps `jquery <https://github.com/jquery/jquery>`_ from 3.4.1 to 3.5.0.
+
+* Packages: ``Neos``
+
+`TASK: Bump acorn from 6.2.1 to 6.4.1 in /Neos.Neos <https://github.com/neos/neos-development-collection/pull/3022>`_
+---------------------------------------------------------------------------------------------------------------------
+
+Bumps `acorn <https://github.com/acornjs/acorn>`_ from 6.2.1 to 6.4.1.
+
+* Packages: ``Neos``
+
+`TASK: Remove deprecated code use from ContentCollectionRenderer <https://github.com/neos/neos-development-collection/pull/2772>`_
+----------------------------------------------------------------------------------------------------------------------------------
+
+This replaces the use of `Neos.Fusion:Collection` with `Neos.Fusion:Loop`
+and `Neos.Fusion:Array` with `Neos.Fusion:Join`.
+
+To ensure backwards compatibility there is a processor which overrides
+`items` if the property `collection` is set.
+
+* Packages: ``Neos``
+
+`Bump lodash from 4.17.15 to 4.17.19 in /Neos.Neos <https://github.com/neos/neos-development-collection/pull/3016>`_
+--------------------------------------------------------------------------------------------------------------------
+
+Bumps `lodash <https://github.com/lodash/lodash>`_ from 4.17.15 to 4.17.19.
+
+* Packages: ``Neos``
+
+`FEATURE: User management for non-admins <https://github.com/neos/neos-development-collection/pull/2322>`_
+----------------------------------------------------------------------------------------------------------
+
+This introduces a new role `Neos.Neos:UserManager`. When an editor has that role, he is able to manage users with roles not exceeding his own, without being an Administrator.
+
+!`peek 2018-12-15 23-40 <https://user-images.githubusercontent.com/837032/50047249-cf1dc180-00c2-11e9-85d0-2fe681f70e26.gif>`_
+
+* Packages: ``Neos``
+
+Detailed log
+~~~~~~~~~~~~
+
+The `detailed log <https://github.com/neos/neos-development-collection/compare/5.3.0...7.0.0>`_ is messed up this time,
+since we had to do some history-rewriting Git magic.
+
+A more realistic view is the combination of
+
+- https://github.com/neos/neos-development-collection/compare/f94d94e11602dfcb0755c2b7cb3042a98069b804...e2971c6d827e2ef985f88dc34eee4a84d368dcc2
+- and https://github.com/neos/neos-development-collection/compare/5.3.0...7559b90ab1d06402e2d85e8f9f7c5d608244ad85
+
+Even that is quite large, feel free to ignore all the Neos.Fusion.Afx commits (that has been integrated into the Neos
+development collection from it's original repository–which is now a reads-only split.)

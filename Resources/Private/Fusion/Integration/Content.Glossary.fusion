@@ -33,9 +33,11 @@ prototype(Sitegeist.Nomenclator:Content.Glossary) < prototype(Neos.Neos:ContentC
                 property = 'variants'
                 block = false
             }
-            imageSource = Neos.Neos:ImageUri {
+            imageSource = Sitegeist.Kaleidoscope:AssetImageSource {
                 asset = ${q(entryItem).property('image')}
             }
+            srcset = "300w"
+            sizes = "100vw"
             imageAlt = ${q(entryItem).property('imageAlternativeText')}
             imageTitle = ${q(entryItem).property('imageTitle')}
 

@@ -1,0 +1,34 @@
+prototype(Neos.Fusion.Form:Form) < prototype(Neos.Fusion.Form:Component.Form) {
+
+    renderer = afx`
+        <form
+            action={form.getTarget()}
+            method={form.getMethod()}
+            enctype={form.getEncoding()}
+            {...props.attributes}
+        >
+            <div style="display: none">
+                <Neos.Fusion:Loop
+                    items={form.calculateHiddenFields(props.content)}
+                    itemKey="fieldName"
+                    itemName="fieldValue"
+                >
+                    <input type="hidden" name={fieldName} value={fieldValue} />
+                </Neos.Fusion:Loop>
+                <Neos.Fusion:Join
+                    @if.isNoGetRequest={String.toLowerCase(form.getMethod()) != 'get'}
+                    @if.isAuthenticated={Security.isAuthenticated()}
+                >
+                    <input
+                        @cache.mode="uncached"
+                        @cache.context={[]}
+                        type="hidden"
+                        name="__csrfToken"
+                        value={Security.csrfToken()}
+                    />
+                </Neos.Fusion:Join>
+            </div>
+            {props.content}
+        </form>
+    `
+}

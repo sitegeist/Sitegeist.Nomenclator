@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="" product-name="Neos.Party" source-language="en" datatype="plaintext" target-language="lv">
+    <body>
+      <trans-unit id="personName.title" xml:space="preserve" approved="yes">
+				<source>Title</source>
+			<target state="final">Virsraksts</target></trans-unit>
+      <trans-unit id="personName.firstName" xml:space="preserve" approved="yes">
+				<source>First Name</source>
+			<target state="final">Vārds</target></trans-unit>
+      <trans-unit id="personName.middleName" xml:space="preserve" approved="yes">
+				<source>Middle Name</source>
+			<target state="final">Tēvvārds</target></trans-unit>
+      <trans-unit id="personName.lastName" xml:space="preserve" approved="yes">
+				<source>Last Name</source>
+			<target state="final">Uzvārds</target></trans-unit>
+      <trans-unit id="personName.otherName" xml:space="preserve" approved="yes">
+				<source>Other Name</source>
+			<target state="final">Cits nosaukums</target></trans-unit>
+      <trans-unit id="electronicAddress.type" xml:space="preserve" approved="yes">
+				<source>Type</source>
+			<target state="final">Veids</target></trans-unit>
+      <trans-unit id="electronicAddress.usage" xml:space="preserve" approved="yes">
+				<source>Usage</source>
+			<target state="final">Lietojums</target></trans-unit>
+      <trans-unit id="electronicAddress.identifier" xml:space="preserve" approved="yes">
+				<source>Identifier</source>
+			<target state="final">Identifikators</target></trans-unit>
+      <trans-unit id="electronicAddress.primary" xml:space="preserve" approved="yes">
+				<source>Primary</source>
+			<target state="final">Galvenais</target></trans-unit>
+    </body>
+  </file>
+</xliff>

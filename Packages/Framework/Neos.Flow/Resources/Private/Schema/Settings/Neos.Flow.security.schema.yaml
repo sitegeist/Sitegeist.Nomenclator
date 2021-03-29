@@ -1,0 +1,108 @@
+type: dictionary
+additionalProperties: false
+properties:
+  'firewall':
+    type: dictionary
+    additionalProperties: false
+    required: true
+    properties:
+      'rejectAll': { type: boolean, required: true }
+      'filters':
+        type: dictionary
+        additionalProperties:
+          type: dictionary
+          additionalProperties: false
+          properties:
+            'pattern': { type: string, required: true }
+            'patternOptions': { type: dictionary }
+            'interceptor': { type: string, required: true }
+
+  'authentication':
+    type: dictionary
+    additionalProperties: false
+    required: true
+    properties:
+      'providers':
+        type: dictionary
+        required: true
+        additionalProperties:
+          type: dictionary
+          additionalProperties: false
+          required: true
+          properties:
+            'label': { type: string, required: false }
+            'provider': { type: string, required: true }
+            'providerOptions': { type: dictionary }
+            'requestPatterns':
+              type: dictionary
+              additionalProperties:
+                required: true
+                type:
+                  -
+                    type: 'null'
+                  -
+                    type: 'dictionary'
+                    additionalProperties: false
+                    properties:
+                      'pattern': { type: string, required: true }
+                      'patternOptions': { type: dictionary }
+            'entryPoint': { type: string }
+            'entryPointOptions': { type: dictionary }
+            'token': { type: string, format: class-name }
+            'tokenOptions': { type: dictionary }
+      'authenticationStrategy':
+        type: string
+        required: true
+        enum: [ 'anyToken', 'allTokens', 'oneToken', 'atLeastOneToken' ]
+
+  'authorization':
+    type: dictionary
+    additionalProperties: false
+    required: true
+    properties:
+      'allowAccessIfAllVotersAbstain': { type: boolean, required: true }
+
+  'csrf':
+    type: dictionary
+    additionalProperties: false
+    required: true
+    properties:
+      'csrfStrategy': { type: string, enum: ['onePerRequest', 'onePerSession', 'onePerUri'], required: true }
+
+  'cryptography':
+    type: dictionary
+    additionalProperties: false
+    required: true
+    properties:
+      'hashingStrategies':
+        type: dictionary
+        additionalProperties: { type: string, format: class-name }
+        required: true
+        properties:
+          'default': { type: string, required: true }
+
+      'Pbkdf2HashingStrategy':
+        type: dictionary
+        additionalProperties: false
+        required: true
+        properties:
+          'dynamicSaltLength': { type: integer, required: true }
+          'iterationCount': { type: integer, required: true }
+          'derivedKeyLength': { type: integer, required: true }
+          'algorithm': { type: string, required: true }
+
+      'BCryptHashingStrategy':
+        type: dictionary
+        additionalProperties: false
+        required: true
+        properties:
+          'cost': { type: integer, required: true }
+
+      'RSAWalletServicePHP':
+        type: dictionary
+        additionalProperties: false
+        required: true
+        properties:
+          'keystorePath': { type: string, required: true }
+          'paddingAlgorithm': { type: [string, integer], required: true }
+          'openSSLConfiguration': { type: dictionary, required: true }

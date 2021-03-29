@@ -1,0 +1,35 @@
+type: dictionary
+additionalProperties: false
+properties:
+  'extensionsBlockedFromUpload':
+    type: dictionary
+    additionalProperties:
+      type: boolean
+  'storages':
+    type: dictionary
+    required: true
+    additionalProperties:
+      type: dictionary
+      additionalProperties: false
+      properties:
+        'storage': { type: string, required: true }
+        'storageOptions': { type: dictionary, additionalProperties: true }
+  'collections':
+    type: dictionary
+    required: true
+    additionalProperties:
+      type: dictionary
+      additionalProperties: false
+      properties:
+        'storage': { type: string, required: true }
+        'target': { type: string, required: true }
+        'pathPatterns': { type: array,  items: { type: string }}
+  'targets':
+    type: dictionary
+    required: true
+    additionalProperties:
+      type: dictionary
+      additionalProperties: false
+      properties:
+        'target': { type: string, required: true }
+        'targetOptions': { type: dictionary, additionalProperties: true }

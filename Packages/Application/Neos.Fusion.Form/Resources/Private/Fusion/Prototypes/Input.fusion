@@ -1,0 +1,12 @@
+prototype(Neos.Fusion.Form:Input)  < prototype(Neos.Fusion.Form:Component.Field) {
+
+    attributes.type = 'text'
+
+    renderer = afx`
+        <input
+            name={field.getName()}
+            value={field.getCurrentValueStringified() || field.getTargetValueStringified()}
+            {...props.attributes}
+        />
+    `
+}

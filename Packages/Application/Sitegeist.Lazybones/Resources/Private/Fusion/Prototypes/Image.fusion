@@ -1,0 +1,111 @@
+prototype(Sitegeist.Lazybones:Image) < prototype(Neos.Fusion:Component) {
+    @styleguide {
+        props {
+            imageSource = Sitegeist.Kaleidoscope:DummyImageSource
+            alt = 'Elva dressed as a fairy'
+        }
+
+        propSets {
+            multires_array {
+                srcset = ${['1x', '1.5x', '2x']}
+            }
+
+            multires_string {
+                srcset = '1x, 1.5x, 2x'
+            }
+
+            multisize_array {
+                srcset = ${['320w', '400w', '600w', '800w', '1000w', '1200w', '1600']}
+            }
+
+            multisize_string {
+                srcset = '320w, 400ww, 600w, 800w, 1000w, 1200w, 1600'
+            }
+
+            sizes_array {
+                srcset = ${['320w', '400w', '600w', '800w', '1000w', '1200w', '1600']}
+                sizes = ${['(max-width: 320px) 280px', '(max-width: 480px) 440px', '800px']}
+            }
+
+            sizes_string {
+                srcset = '320w, 400ww, 600w, 800w, 1000w, 1200w, 1600'
+                sizes = '(max-width: 320px) 280px, (max-width: 480px) 440px, 800px'
+            }
+        }
+    }
+
+    @propTypes {
+        imageSource = ${PropTypes.instanceOf('\\Sitegeist\\Kaleidoscope\\EelHelpers\\ImageSourceHelperInterface')}
+    }
+
+    lazy = Sitegeist.Lazybones:Lazy.Enabled
+    lazyClass = Sitegeist.Lazybones:Lazy.ClassName
+    lazyWidth = Sitegeist.Lazybones:Lazy.Width
+
+    imageSource = null
+    srcset = null
+    sizes = null
+    alt = ''
+    title = null
+    class = null
+    width = null
+    height = null
+    format = null
+    renderDimensionAttributes = true
+
+    renderer = Neos.Fusion:Case {
+
+        lazy {
+            condition = ${props.lazy}
+            renderer = Neos.Fusion:Component {
+                @if.hasImageSource = ${props.imageSource && Type.instance(props.imageSource, '\\Sitegeist\\Kaleidoscope\\EelHelpers\\ImageSourceHelperInterface')}
+
+                # apply format, width and height to the imageSource
+                imageSource = ${props.imageSource}
+                imageSource.@process.applyWidth = ${props.width ? value.setWidth(props.width) : value}
+                imageSource.@process.applyHeight = ${props.height ? value.setHeight(props.height) : value}
+                imageSource.@process.applyFormat = ${props.format ? value.setFormat(props.format) : value}
+
+                srcset = ${props.srcset}
+                sizes = ${props.sizes}
+                alt =  ${props.alt}
+                title = ${props.title}
+                class = ${props.class}
+                renderDimensionAttributes = ${props.renderDimensionAttributes}
+
+                lazyClass = ${props.lazyClass}
+                lazyWidth = ${props.lazyWidth}
+
+                renderer = afx`
+                    <img
+                        src={props.lazyWidth ? props.imageSource.setWidth(props.lazyWidth, true) : null}
+                        src.@process.svgPlaceholder={"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 " + props.imageSource.currentWidth + " " + props.imageSource.currentHeight + "'></svg>"}
+                        src.@process.svgPlaceholder.@if.isEmpty={!value}
+                        src.@process.svgPlaceholder.@if.dimensionsRenderingIsEnabled={props.renderDimensionAttributes}
+                        src.@process.svgPlaceholder.@if.dimensionsAreAvailable={props.imageSource.currentWidth && props.imageSource.currentHeight}
+
+                        data-src={props.imageSource.src()}
+                        data-srcset={props.imageSource.srcset(props.srcset)}
+                        data-srcset.@if.has={props.srcset}
+                        data-sizes={props.sizes}
+                        data-sizes.@process.join={Type.isArray(value) ? Array.join(value, ', ') : value}
+
+                        width={props.renderDimensionAttributes ? props.imageSource.currentWidth : null}
+                        height={props.renderDimensionAttributes ? props.imageSource.currentHeight : null}
+
+                        class={props.class ? props.class + ' ' + props.lazyClass : props.lazyClass}
+                        alt={props.alt}
+                        title={props.title}
+                    />
+                `
+            }
+        }
+
+        default {
+            condition = true
+            renderer = afx`
+                <Sitegeist.Kaleidoscope:Image {...props} />
+            `
+        }
+    }
+}

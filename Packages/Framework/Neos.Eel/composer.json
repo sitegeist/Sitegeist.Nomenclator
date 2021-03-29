@@ -1,0 +1,28 @@
+{
+    "name": "neos/eel",
+    "type": "neos-framework",
+    "license": ["MIT"],
+    "description": "The Embedded Expression Language (Eel) is a building block for creating Domain Specific Languages",
+    "require": {
+        "php": "^7.3 || ^8.0",
+        "neos/flow": "~7.0.0",
+        "neos/cache": "*",
+        "neos/utility-unicode": "*",
+        "neos/utility-objecthandling": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Neos\\Eel\\": "Classes"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Neos\\Eel\\Tests\\": "Classes"
+        }
+    },
+    "extra": {
+        "neos": {
+            "package-key": "Neos.Eel"
+        }
+    }
+}

@@ -1,0 +1,30 @@
+{
+  "name": "neos/utility-objecthandling",
+  "description": "Flow array/object property and type utilities",
+  "type": "library",
+  "homepage": "http://flow.neos.io",
+  "license": "MIT",
+  "require": {
+    "php": "^7.3 || ^8.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~9.0",
+    "doctrine/orm": "^2.6",
+    "doctrine/common": "^2.13.1 || ^3.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Neos\\Utility\\": "Classes"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Neos\\Utility\\ObjectHandling\\Tests\\": "Tests"
+    }
+  },
+  "extra": {
+    "neos": {
+      "package-key": "Neos.Utility.ObjectHandling"
+    }
+  }
+}

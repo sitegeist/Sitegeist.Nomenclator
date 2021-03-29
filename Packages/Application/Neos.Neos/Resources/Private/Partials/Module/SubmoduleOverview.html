@@ -1,0 +1,25 @@
+{namespace neos=Neos\Neos\ViewHelpers}
+<f:if condition="{moduleConfiguration.submodules}">
+	<div class="neos-row-fluid">
+		<f:for each="{moduleConfiguration.submodules}" key="submoduleIdentifier" as="submoduleConfiguration" iteration="iterator">
+			<neos:backend.ifModuleAccessible modulePath="{moduleConfiguration.path}/{submoduleIdentifier}" moduleConfiguration="{submoduleConfiguration}">
+				<f:render section="submodule" arguments="{_all}" />
+			</neos:backend.ifModuleAccessible>
+		</f:for>
+	</div>
+</f:if>
+
+<f:section name="submodule">
+	<div class="neos-span4">
+		<neos:standaloneView templatePathAndFilename="{f:if(condition: submoduleConfiguration.widgetTemplatePathAndFileName, then: submoduleConfiguration.widgetTemplatePathAndFileName, else: settings.moduleConfiguration.widgetTemplatePathAndFileName)}" arguments="{moduleConfiguration: moduleConfiguration, submoduleIdentifier: submoduleIdentifier, submoduleConfiguration: submoduleConfiguration}" />
+	</div>
+	<f:if condition="{iterator.cycle} % 3">
+		<f:else>
+			<f:if condition="{iterator.isLast}">
+				<f:else>
+					</div><div class="neos-row-fluid">
+				</f:else>
+			</f:if>
+		</f:else>
+	</f:if>
+</f:section>

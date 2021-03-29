@@ -1,0 +1,117 @@
+Neos:
+  Flow:
+    persistence:
+      doctrine:
+        eventListeners:
+          Neos\Media\Domain\EventListener\ImageEventListener:
+            events:
+              - postRemove
+            listener: Neos\Media\Domain\EventListener\ImageEventListener
+    mvc:
+      routes:
+        Neos.Media: true
+
+  Media:
+    # Enable asynchronous thumbnails
+    asyncThumbnails: true
+    # Thumbnail presets
+    thumbnailPresets: {  }
+    # Automatically create thumbnails for configured presets when assets are added
+    autoCreateThumbnailPresets: true
+
+    iconSet:
+      path: 'resource://Neos.Media/Public/IconSets/vivid'
+      extension: 'svg'
+
+    assetSources:
+      'neos':
+        assetSource: 'Neos\Media\Domain\Model\AssetSource\Neos\NeosAssetSource'
+        assetSourceOptions:
+          icon: 'resource://Neos.Media/Public/Icons/NeosWhite.svg'
+          description: 'Assets in the local asset storage'
+          # asyncThumbnails: defaults to the value of Neos:Media:asyncThumbnails
+          asyncThumbnails: ~
+
+
+    asset:
+      modelMappingStrategy:
+        default: Neos\Media\Domain\Model\Document
+        patterns:
+          '[image/.*]':
+            className: Neos\Media\Domain\Model\Image
+          '[audio/.*]':
+            className: Neos\Media\Domain\Model\Audio
+          '[video/.*]':
+            className: Neos\Media\Domain\Model\Video
+    image:
+      defaultOptions:
+        # Image quality, from 0 to 100
+        quality: 90
+        convertCMYKToRGB: true
+        # Image formats that shall always be converted regardless wether an adjustment was applied or not
+        # The key is the the source media-type and the value is the target media-type or file-extension
+        # like "image/tiff: image/jpeg". Please ensure the target format is supported by the imagine-driver.
+        convertFormats: []
+        interlace: '%\Imagine\Image\ImageInterface::INTERLACE_NONE%'
+        # defines the filter to use for resize operations.
+        # Note that the default GD driver only supports the FILTER_UNDEFINED.
+        # Check the \Imagine\Image\ImageInterface class for a reference of all filters.
+        # They roughly line up with ImageMagick filters, so read up on those to see differences.
+        # A very cheap filter with reasonable quality would be "FILTER_BOX", alternative is "FILTER_CATROM".
+        resizeFilter: '%\Imagine\Image\ImageInterface::FILTER_UNDEFINED%'
+
+    # Variant presets
+    variantPresets: []
+    # Automatically create asset variants for configured presets when assets are added
+    autoCreateImageVariantPresets: false
+
+    thumbnailGenerators:
+
+      Neos\Media\Domain\Model\ThumbnailGenerator\DocumentThumbnailGenerator:
+        resolution: 120
+        supportedExtensions:
+          - pdf
+          - eps
+          - ai
+        paginableDocuments:
+          - pdf
+      Neos\Media\Domain\Model\ThumbnailGenerator\FontDocumentThumbnailGenerator:
+        supportedExtensions:
+          - ttf
+          - otf
+
+  DocTools:
+    collections:
+      Media:
+        commandReferences:
+          - 'Media:Commands'
+        references:
+          - 'Media:ViewHelpers'
+          - 'Media:Validators'
+    commandReferences:
+      'Media:Commands':
+        title: 'Media Command Reference'
+        packageKeys:
+          - Neos.Media
+        savePathAndFilename: '%FLOW_PATH_PACKAGES%Neos/Neos.Media/Documentation/References/Commands.rst'
+    references:
+      'Media:Validators':
+        title: 'Media Validator Reference'
+        savePathAndFilename: '%FLOW_PATH_PACKAGES%Neos/Neos.Media/Documentation/References/Validators.rst'
+        affectedClasses:
+          parentClassName: Neos\Flow\Validation\Validator\AbstractValidator
+          classNamePattern: '/^Neos\\Media\\Validator\\.*$/i'
+        parser:
+          implementationClassName: Neos\DocTools\Domain\Service\FlowValidatorClassParser
+      'Media:ViewHelpers':
+        title: 'Media ViewHelper Reference'
+        savePathAndFilename: '%FLOW_PATH_PACKAGES%Neos/Neos.Media/Documentation/References/ViewHelpers.rst'
+        affectedClasses:
+          parentClassName: Neos\FluidAdaptor\Core\ViewHelper\AbstractViewHelper
+          classNamePattern: '/^Neos\\Media\\ViewHelpers\\.*$/i'
+        parser:
+          implementationClassName: Neos\DocTools\Domain\Service\FluidViewHelperClassParser
+          options:
+            namespaces:
+              neos.media: Neos\Media\ViewHelpers
+
