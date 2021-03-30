@@ -43,6 +43,10 @@ document.body.addEventListener('click', () => {
 	removeModal();
 }, true);
 
+window.addEventListener("resize", () => {
+	removeModal();
+});
+
 document.addEventListener('keydown', function(e) {
 	if (e.key === 'Escape') {
 		removeModal();
