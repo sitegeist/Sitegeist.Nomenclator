@@ -8,7 +8,7 @@ use Neos\ContentRepository\Domain\Projection\Content\TraversableNodeInterface;
 use Neos\ContentRepository\Exception\NodeException;
 use Neos\Flow\Annotations as Flow;
 
-class GlossaryEntry implements \JsonSerializable
+final class GlossaryEntry implements \JsonSerializable
 {
     /**
      * @var string
