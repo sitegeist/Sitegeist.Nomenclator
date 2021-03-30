@@ -15,6 +15,6 @@ final class GlossaryEntryInvalid extends \DomainException
 {
     public static function becauseThereAreSomeDuplicates(array $listOfDuplicates): self
     {
-        return new self('The are some duplicated terms in the entries:  "'. implode(", ",$listOfDuplicates) . '"', 1616064392);
+        return new self('The are some duplicated terms in the entries:  "'. implode(", ", $listOfDuplicates) . '"', 1616064392);
     }
 }

@@ -29,9 +29,10 @@ class LinkTermsToGlossaryImplementation extends AbstractFusionObject
      * @return string
      */
 
-    protected function getNodeUri(TraversableNodeInterface $documentNode) {
+    protected function getNodeUri(TraversableNodeInterface $documentNode)
+    {
         $controllerContext = $this->runtime->getControllerContext();
-        $resolvedUri = $this->linkingService->createNodeUri($controllerContext,$documentNode);
+        $resolvedUri = $this->linkingService->createNodeUri($controllerContext, $documentNode);
         return $resolvedUri;
     }
 
@@ -82,16 +83,13 @@ class LinkTermsToGlossaryImplementation extends AbstractFusionObject
 
     public function evaluate()
     {
-
-
         $glossary = $this->getGlossaryNodes();
 
         $isInBackend = $this->getNode()->getContext()->isInBackend();
 
         $content = $this->getValue();
 
-        if(!$glossary['node']->getProperty('linkingActivated') || $isInBackend || !$glossary['node']) {
-
+        if (!$glossary['node']->getProperty('linkingActivated') || $isInBackend || !$glossary['node']) {
             return $content;
         }
 
@@ -103,46 +101,44 @@ class LinkTermsToGlossaryImplementation extends AbstractFusionObject
 
         $processedContent = "" ;
 
-        while(strlen($content)){
+        while (strlen($content)) {
+            $nextLaBracket = (strpos($content, '<') === false) ? strlen($content) - 1 : strpos($content, '<') ;
 
-            $nextLaBracket = (strpos($content,'<') === false) ? strlen($content) - 1 : strpos($content,'<') ;
-            $nextRaBracket = (strpos($content,'>') === false) ? strlen($content) - 1 : strpos($content,'>') ;
+            $nextRaBracket = (strpos($content, '>') === false) ? strlen($content) - 1 : strpos($content, '>') ;
 
-            $currentPosition = min ($nextLaBracket , $nextRaBracket) ;
+            $currentPosition = min($nextLaBracket, $nextRaBracket) ;
 
             $currentBracket = $content[$currentPosition];
 
-            $buffer = substr($content,0,++$currentPosition);
+            $buffer = substr($content, 0, ++$currentPosition);
 
             $content = substr($content, $currentPosition);
 
-
-            if($lastBracket == '<' && $currentBracket == '>') {
-
+            if ($lastBracket == '<' && $currentBracket == '>') {
                 $processedContent = $processedContent . $buffer;
-
             } else {
                 foreach ($glossaryIndex['terms'] as $term => $identifier) {
-
                     $pattern = '/\b'.$term.'\b/i';
 
-                    $buffer = preg_replace_callback ($pattern , function($matches) use ($glossaryIndex, $identifier, $glossaryUri){
-
-                        return sprintf('<a class="nomenclator_entry" href="%s#%s" data-identifier="%s">%s</a>', $glossaryUri, $glossaryIndex['titles'][(string)$identifier],$identifier ,$matches[0]);
-
-
+                    $buffer = preg_replace_callback($pattern, function ($matches) use (
+                        $glossaryIndex,
+                        $identifier,
+                        $glossaryUri
+                    ) {
+                        return sprintf(
+                            '<a class="nomenclator_entry" href="%s#%s" data-identifier="%s">%s</a>',
+                            $glossaryUri,
+                            $glossaryIndex['titles'][(string)$identifier],
+                            $identifier,
+                            $matches[0]
+                        );
                     },
                     $buffer);
-
                 }
-
                 $processedContent = $processedContent . $buffer;
             }
-
             $lastBracket=$currentBracket;
         }
-
         return $processedContent;
     }
-
 }

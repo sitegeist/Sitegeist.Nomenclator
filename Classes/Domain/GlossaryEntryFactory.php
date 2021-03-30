@@ -17,7 +17,8 @@ class GlossaryEntryFactory
      * @param string $glossaryEntryNodeIdentifier
      * @return GlossaryEntry
      */
-    public function fromNodeIdentifier(string $glossaryEntryNodeIdentifier) {
+    public function fromNodeIdentifier(string $glossaryEntryNodeIdentifier)
+    {
         $contentContext = $this->contentContextFactory->create([]);
         $glossaryEntryNode = $contentContext->getNodeByIdentifier($glossaryEntryNodeIdentifier);
         $shortDescription = $glossaryEntryNode->getProperty('shortDescription');

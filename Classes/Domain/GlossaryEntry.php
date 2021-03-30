@@ -16,7 +16,8 @@ class GlossaryEntry implements \JsonSerializable
     private $shortDescription;
 
 
-    public function __construct( string $shortDescription )    {
+    public function __construct(string $shortDescription)
+    {
 
         $this->shortDescription = $shortDescription;
     }
@@ -35,5 +36,4 @@ class GlossaryEntry implements \JsonSerializable
             'shortDescription' => $this->shortDescription
             ];
     }
-
 }

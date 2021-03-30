@@ -31,7 +31,7 @@ class Glossary
         if ($node->getNodeType()->isOfType('Sitegeist.Nomenclator:Content.Glossary.Entry')) {
             $glossaryNode = $node->findParentNode();
             $this->saveGlossaryInCache($glossaryNode);
-            }
+        }
     }
 
     public function saveGlossaryInCache(TraversableNodeInterface $glossaryNode) :array
@@ -57,7 +57,6 @@ class Glossary
         if ($this->glossaryIndexCache->has($this->cacheIdentifier)) {
             return unserialize($this->glossaryIndexCache->get($this->cacheIdentifier));
         } else {
-
             return $this->saveGlossaryInCache($glossaryNode);
         }
     }
@@ -79,18 +78,17 @@ class Glossary
 
             $entryNodes = $glossaryNode->findChildNodes(new NodeTypeConstraints(false, ['Sitegeist.Nomenclator:Content.Glossary.Entry']));
 
-            foreach ( $entryNodes as $entryNode) {
+            foreach ($entryNodes as $entryNode) {
                 if ($entryNode->getProperty('title')) {
+                    $variants =  explode($termSeparator, $entryNode->getProperty('variants'));
 
-                    $variants =  explode($termSeparator , $entryNode->getProperty('variants'));
-
-                    $variants = array_filter($variants, function($value) {
+                    $variants = array_filter($variants, function ($value) {
                         return $value !== ' ' && $value !== '';
                     });
 
                     $title = $entryNode->getProperty('title');
 
-                    $title = trim (str_replace(['&nbsp;', '<br>'], '', $title));
+                    $title = trim(str_replace(['&nbsp;', '<br>'], '', $title));
 
                     $nodeIdentifier = $entryNode->getNodeAggregateIdentifier();
 
@@ -100,8 +98,8 @@ class Glossary
 
                     $titles[(string)$nodeIdentifier] = $title;
 
-                    foreach ($variants as $variant)  {
-                        $terms[]=  trim (str_replace(['&nbsp;', '<br>'], '', $variant));
+                    foreach ($variants as $variant) {
+                        $terms[]=  trim(str_replace(['&nbsp;', '<br>'], '', $variant));
 
                         $nodeIdentifiers[] = $nodeIdentifier;
                     }
@@ -112,14 +110,14 @@ class Glossary
                 throw GlossaryEntryInvalid::becauseThereAreSomeDuplicates($duplicates);
             }
 
-            $glossaryIndex['terms'] = array_combine ($terms, $nodeIdentifiers );
+            $glossaryIndex['terms'] = array_combine($terms, $nodeIdentifiers);
             $glossaryIndex['titles'] = $titles;
         }
 
         return $glossaryIndex;
     }
 
-    private function glossaryDuplicates(array $terms,array $nodeIdentifiers, array $titles) : array
+    private function glossaryDuplicates(array $terms, array $nodeIdentifiers, array $titles) : array
     {
 
         $duplicates=[];

@@ -32,5 +32,4 @@ class GlossaryEntryController extends RestController
         $glossaryEntry = $this->glossaryEntryFactory->fromNodeIdentifier($identifier);
         $this->view->assign('value', $glossaryEntry);
     }
-
 }
