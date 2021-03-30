@@ -99,9 +99,12 @@ class Glossary
                     $titles[(string)$nodeIdentifier] = $title;
 
                     foreach ($variants as $variant) {
-                        $terms[]=  trim(str_replace(['&nbsp;', '<br>'], '', $variant));
+                        $variant = trim(str_replace(['&nbsp;', '<br>'], '', $variant));
 
-                        $nodeIdentifiers[] = $nodeIdentifier;
+                        if ($variant !== '') {
+                            $terms[] = $variant;
+                            $nodeIdentifiers[] = $nodeIdentifier;
+                        }
                     }
                 }
             }
