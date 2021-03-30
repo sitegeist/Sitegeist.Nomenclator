@@ -3,12 +3,10 @@ namespace Sitegeist\Nomenclator\Fusion;
 
 use Neos\ContentRepository\Domain\Projection\Content\TraversableNodeInterface;
 use Neos\Flow\Annotations as Flow;
-use Neos\Flow\Core\Bootstrap;
 use Neos\Neos\Service\LinkingService;
 use Sitegeist\Nomenclator\Domain\Glossary;
 use Neos\Fusion\FusionObjects\AbstractFusionObject;
 use Neos\Eel\FlowQuery\FlowQuery;
-use Sitegeist\Nomenclator\Infrastructure\UriService;
 
 class LinkTermsToGlossaryImplementation extends AbstractFusionObject
 {
@@ -18,12 +16,6 @@ class LinkTermsToGlossaryImplementation extends AbstractFusionObject
      * @var Glossary
      */
     protected $glossary;
-
-    /**
-     * @Flow\Inject
-     * @var Bootstrap
-     */
-    protected $bootstrap;
 
     /**
      * @Flow\Inject
@@ -136,7 +128,7 @@ class LinkTermsToGlossaryImplementation extends AbstractFusionObject
 
                     $buffer = preg_replace_callback ($pattern , function($matches) use ($glossaryIndex, $identifier, $glossaryUri){
 
-                        return sprintf('<a class="nomenclator_enrty" href="%s#%s" data-identifier="%s">%s</a>', $glossaryUri, $glossaryIndex['titles'][(string)$identifier],$identifier ,$matches[0]);
+                        return sprintf('<a class="nomenclator_entry" href="%s#%s" data-identifier="%s">%s</a>', $glossaryUri, $glossaryIndex['titles'][(string)$identifier],$identifier ,$matches[0]);
 
 
                     },
