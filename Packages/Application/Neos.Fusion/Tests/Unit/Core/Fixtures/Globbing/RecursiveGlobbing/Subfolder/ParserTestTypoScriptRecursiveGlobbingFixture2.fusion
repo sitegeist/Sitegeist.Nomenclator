@@ -1,3 +1,0 @@
-# Test relative paths
-include: ../../Aside/*
-recursiveGlobbing2 = Text

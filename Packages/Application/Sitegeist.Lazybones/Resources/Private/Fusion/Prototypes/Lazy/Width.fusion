@@ -1,3 +1,0 @@
-prototype(Sitegeist.Lazybones:Lazy.Width) < prototype(Neos.Fusion:Value) {
-    value = null
-}

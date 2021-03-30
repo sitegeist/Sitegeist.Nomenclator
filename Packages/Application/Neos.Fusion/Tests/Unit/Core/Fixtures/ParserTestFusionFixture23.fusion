@@ -1,7 +1,0 @@
-prototype(4Testing:Example) {
-    someValue = true
-}
-
-somepath {
-    101Neos = 'A string value'
-}

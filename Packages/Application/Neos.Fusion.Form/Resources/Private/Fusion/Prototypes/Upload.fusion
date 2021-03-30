@@ -1,5 +1,0 @@
-prototype(Neos.Fusion.Form:Upload)  < prototype(Neos.Fusion.Form:Input) {
-
-    attributes.type = "file"
-
-}

@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-	const entryTargets = Array.from(document.getElementsByClassName('nomenclator_enrty'));
+	const entryTargets = Array.from(document.getElementsByClassName('nomenclator_entry'));
 	entryTargets.forEach((entryTarget) => {
 		entryTarget.addEventListener('click', handleEntryClick, false);
 	});

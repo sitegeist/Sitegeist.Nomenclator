@@ -1,3 +1,0 @@
-Eel_Expression_Code:
-  frontend: Neos\Cache\Frontend\StringFrontend
-  backend: Neos\Cache\Backend\SimpleFileBackend

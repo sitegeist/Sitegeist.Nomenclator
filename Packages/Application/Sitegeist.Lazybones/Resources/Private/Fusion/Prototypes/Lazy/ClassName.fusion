@@ -1,3 +1,0 @@
-prototype(Sitegeist.Lazybones:Lazy.ClassName) < prototype(Neos.Fusion:Value) {
-    value = 'lazyload'
-}

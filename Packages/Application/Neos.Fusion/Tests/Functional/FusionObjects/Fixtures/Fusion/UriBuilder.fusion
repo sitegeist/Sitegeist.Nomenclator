@@ -1,8 +1,0 @@
-prototype(Neos.Fusion:UriBuilder).@class = 'Neos\\Fusion\\FusionObjects\\UriBuilderImplementation'
-
-uriBuilder.foo = Neos.Fusion:UriBuilder {
-  package = 'Neos.Flow'
-  subpackage = 'Tests\\Functional\\Http\\Fixtures'
-  controller = 'Foo'
-  action = 'index'
-}

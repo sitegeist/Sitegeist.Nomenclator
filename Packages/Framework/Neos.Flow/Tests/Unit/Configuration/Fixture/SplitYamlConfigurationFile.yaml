@@ -1,5 +1,0 @@
-configurationFileHasBeenLoaded: true
-Neos:
-  Flow:
-    default: 'test'
-    toBeOverwritten: 1

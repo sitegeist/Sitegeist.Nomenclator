@@ -1,2 +1,0 @@
-Neos_Fusion_Content:
-  backend: Neos\Cache\Backend\TransientMemoryBackend

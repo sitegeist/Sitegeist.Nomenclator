@@ -1,3 +1,0 @@
-<f:Form actionUri="foo/Bar">
-	<f:form.upload name="foo" />
-</f:form>
