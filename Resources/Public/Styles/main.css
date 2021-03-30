@@ -60,13 +60,6 @@
 	font-weight: 600;
 	color: #fff8f8;
 	text-decoration: none;
-}
-
-body {
-
-}
-
-
-.neos-contentcollection{
-	position: relative;
+	vertical-align: bottom;
+	line-height: 1.1em;
 }
