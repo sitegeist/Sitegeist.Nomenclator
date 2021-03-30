@@ -4,6 +4,7 @@ namespace Sitegeist\Nomenclator\Fusion;
 use Neos\ContentRepository\Domain\Projection\Content\TraversableNodeInterface;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Core\Bootstrap;
+use Neos\Neos\Service\LinkingService;
 use Sitegeist\Nomenclator\Domain\Glossary;
 use Neos\Fusion\FusionObjects\AbstractFusionObject;
 use Neos\Eel\FlowQuery\FlowQuery;
@@ -26,9 +27,22 @@ class LinkTermsToGlossaryImplementation extends AbstractFusionObject
 
     /**
      * @Flow\Inject
-     * @var UriService
+     * @var LinkingService
      */
-    protected $uriService;
+    protected $linkingService;
+
+    /**
+     * @param TraversableNodeInterface $documentNode
+     * @param bool $absolute
+     * @return string
+     */
+
+    protected function getNodeUri(TraversableNodeInterface $documentNode) {
+        $controllerContext = $this->runtime->getControllerContext();
+        $resolvedUri = $this->linkingService->createNodeUri($controllerContext,$documentNode);
+        return $resolvedUri;
+    }
+
 
     /**
      * Glossary page and glossary root component of the site
@@ -46,9 +60,9 @@ class LinkTermsToGlossaryImplementation extends AbstractFusionObject
 
         $glossaryPages = (new FlowQuery([$site]))->find('[instanceof Sitegeist.Nomenclator:Document.Glossary]')->get();
 
-        $glossary['node'] = reset($glossaryNodes);
+        $glossary['node'] = $glossaryNodes[0];
 
-        $glossary['page'] = reset($glossaryPages);
+        $glossary['page'] = $glossaryPages[0];
 
         return $glossary;
     }
@@ -91,7 +105,7 @@ class LinkTermsToGlossaryImplementation extends AbstractFusionObject
 
         $glossaryIndex = $this->glossary->readGlossaryIndexFromCache($glossary['node']);
 
-        $glossaryUri = $this->uriService->getNodeUri($glossary['page']);
+        $glossaryUri = $this->getNodeUri($glossary['page']);
 
         $lastBracket = '';
 
