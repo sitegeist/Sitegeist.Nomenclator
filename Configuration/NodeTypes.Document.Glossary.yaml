@@ -22,4 +22,4 @@
       ui:
         label: 'Link words to the glossary page'
         inspector:
-          group: general
+          group: document

@@ -1,7 +1,6 @@
 <?php
 namespace Sitegeist\Nomenclator\Domain;
 
-use GlossaryIndex;
 use Neos\Flow\Annotations as Flow;
 use Neos\ContentRepository\Domain\Model\Workspace;
 use Neos\ContentRepository\Domain\Projection\Content\TraversableNodeInterface;
@@ -29,7 +28,7 @@ final class Glossary
         }
     }
 
-    public function saveGlossaryInCache(TraversableNodeInterface $glossaryNode) :array
+    public function saveGlossaryInCache(TraversableNodeInterface $glossaryNode) : GlossaryIndex
     {
         $glossaryIndex = $this->glossaryIndexFactory->fromNode($glossaryNode);
 
@@ -49,7 +48,7 @@ final class Glossary
     public function readGlossaryIndexFromCache(TraversableNodeInterface $glossaryNode): GlossaryIndex
     {
 
-        if ($this->glossaryIndexCache->has($this->cacheIdentifier)) {
+        if ($this->glossaryIndexCache->has($this->getCacheIdentifierFromNode($glossaryNode))) {
             return unserialize($this->glossaryIndexCache->get($this->getCacheIdentifierFromNode($glossaryNode)));
         } else {
             return $this->saveGlossaryInCache($glossaryNode);

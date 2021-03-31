@@ -5,6 +5,7 @@ namespace Sitegeist\Nomenclator\Domain;
  * This file is part of the Sitegeist.Nomenclator package.
  */
 
+use Neos\ContentRepository\Domain\Projection\Content\TraversableNodeInterface;
 use Neos\Flow\Annotations as Flow;
 
 /**
@@ -17,4 +18,9 @@ final class GlossaryIndexInvalid extends \DomainException
     {
         return new self('The are some duplicated terms in the entries:  "'. implode(", ", $listOfDuplicates) . '"', 1616064392);
     }
+    public static function becauseNodeIsNotOfTypeGlossary(TraversableNodeInterface $node): self
+    {
+        return new self('Instead of a Glossary node type a '. $node->getNodeType()->getName() .' was given ', 1617189820);
+    }
 }
+

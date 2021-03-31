@@ -20,9 +20,9 @@ prototype(Sitegeist.Nomenclator:Document.Glossary) < prototype(Neos.Fusion:Compo
         }
 
         body = Sitegeist.Nomenclator:Component.Page {
-            content = Neos.Neos:ContentCollection {
+            content = Neos.Neos:ContentCase {
                 @process.convertUris = Neos.Neos:ConvertUris
-                nodePath = 'main'
+                @context.node= ${q(node).children('main').get(0)}
             }
         }
 

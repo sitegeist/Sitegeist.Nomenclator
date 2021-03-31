@@ -12,27 +12,24 @@ prototype(Sitegeist.Nomenclator:Content.Glossary) < prototype(Neos.Neos:ContentC
             title = Neos.Neos:Editable {
                 node = ${entryItem}
                 property = 'title'
-                block = false
             }
             shortDescription = Neos.Neos:Editable {
                 @if.inBackend = ${node.context.inBackend}
                 node = ${entryItem}
                 property = 'shortDescription'
-                block = false
             }
 
             longDescription = Neos.Neos:Editable {
                 node = ${entryItem}
                 property = 'longDescription'
-                block = false
             }
 
             variants = Neos.Neos:Editable {
                 @if.inBackend = ${node.context.inBackend}
                 node = ${entryItem}
                 property = 'variants'
-                block = false
             }
+
             imageSource = Sitegeist.Kaleidoscope:AssetImageSource {
                 asset = ${q(entryItem).property('image')}
             }

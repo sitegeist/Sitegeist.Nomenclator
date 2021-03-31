@@ -1,6 +1,7 @@
 <?php
 namespace Sitegeist\Nomenclator\Fusion;
 
+use Neos\ContentRepository\Domain\NodeAggregate\NodeName;
 use Neos\ContentRepository\Domain\Projection\Content\TraversableNodeInterface;
 use Neos\Flow\Annotations as Flow;
 use Neos\Neos\Service\LinkingService;
@@ -58,9 +59,9 @@ class LinkTermsToGlossaryImplementation extends AbstractFusionObject
      *
      * @return string
      */
-    public function getValue()
+    public function getValue(): string
     {
-        return $this->fusionValue('value');
+        return $this->fusionValue('value') ?? '';
     }
 
     public function evaluate()
@@ -75,7 +76,7 @@ class LinkTermsToGlossaryImplementation extends AbstractFusionObject
             return $content;
         }
 
-        $glossaryNode = $glossaryPage->getChildNode('main');
+        $glossaryNode = $glossaryPage->findNamedChildNode(NodeName::fromString('main'));
         $glossaryIndex = $this->glossary->readGlossaryIndexFromCache($glossaryNode);
 
         return TermReplacer::replaceTerms($content, $glossaryIndex->getTerms(), function (\DOMDocument $doc, string $match, string $term) use ($glossaryIndex, $glossaryPageUri) {

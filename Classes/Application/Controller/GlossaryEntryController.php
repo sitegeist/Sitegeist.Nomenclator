@@ -8,6 +8,7 @@ namespace Sitegeist\Nomenclator\Application\Controller;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Mvc\Controller\RestController;
 use Neos\Flow\Mvc\View\JsonView;
+use Neos\Neos\Domain\Service\ContentContextFactory;
 use Sitegeist\Nomenclator\Domain\GlossaryEntry;
 
 class GlossaryEntryController extends RestController
@@ -36,7 +37,7 @@ class GlossaryEntryController extends RestController
      * @param string $identifier The node to render
      * @return void
      */
-    public function findEntryAction(string $identifier)
+    public function findEntryAction(string $identifier): void
     {
         $contentContext = $this->contentContextFactory->create([]);
         $glossaryEntryNode = $contentContext->getNodeByIdentifier($identifier);

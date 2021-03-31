@@ -1,9 +1,10 @@
 <?php
 namespace Sitegeist\Nomenclator\Domain;
 
+use Neos\ContentRepository\Domain\NodeType\NodeTypeConstraints;
 use Neos\Flow\Annotations as Flow;
 use Neos\ContentRepository\Domain\Projection\Content\TraversableNodeInterface;
-use Neos\Neos\Domain\Service\ContentContextFactory;
+
 
 final class GlossaryIndexFactory
 {
@@ -18,7 +19,7 @@ final class GlossaryIndexFactory
         $nodeType = $glossaryNode->getNodeType();
 
         if (!$nodeType->isOfType('Sitegeist.Nomenclator:Content.Glossary')) {
-            return GlossaryIndexInvalid::becauseNodeIsNotOfTypeGlossary();
+            throw GlossaryIndexInvalid::becauseNodeIsNotOfTypeGlossary($glossaryNode);
         }
 
         $glossaryIndex = [];
@@ -68,7 +69,7 @@ final class GlossaryIndexFactory
             $glossaryIndex['terms'] = array_combine($terms, $nodeIdentifiers);
             $glossaryIndex['titles'] = $titles;
         }
-        return new self($glossaryIndex);
+        return new GlossaryIndex($glossaryIndex);
     }
 
     private function glossaryDuplicates(array $terms, array $nodeIdentifiers, array $titles): array

@@ -1,11 +1,15 @@
 <?php
+namespace Sitegeist\Nomenclator\Domain;
 
 use Neos\ContentRepository\Domain\NodeAggregate\NodeAggregateIdentifier;
-use Neos\ContentRepository\Domain\NodeType\NodeTypeConstraints;
-use Neos\ContentRepository\Domain\Projection\Content\TraversableNodeInterface;
 use Neos\Flow\Annotations as Flow;
 
-class GlossaryIndex
+/**
+ * Class GlossaryIndex
+ * @package Sitegeist\Nomenclator\Domain
+ * @Flow\Proxy(false)
+ */
+final class GlossaryIndex
 {
     /**
      * @var array
@@ -23,16 +27,18 @@ class GlossaryIndex
 
     public function getTerms(): array
     {
-        throw new \Exception('Not implemented yet!');
+        return array_keys($this->entries['terms']);
     }
 
-    public function getTitleForTerm(): string
+    public function getTitleForTerm(string $term): string
     {
-        throw new \Exception('Not implemented yet!');
+        $nodeIdentifier = $this->getNodeIdentifierForTerm($term);
+        return $this->entries['titles'][(string)$nodeIdentifier];
+
     }
 
-    public function getNodeIdentifierForTerm(): NodeAggregateIdentifier
+    public function getNodeIdentifierForTerm(string $term): NodeAggregateIdentifier
     {
-        throw new \Exception('Not implemented yet!');
+        return $this->entries['terms'][$term];
     }
 }
