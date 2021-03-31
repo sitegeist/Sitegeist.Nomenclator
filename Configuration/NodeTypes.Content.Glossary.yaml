@@ -16,14 +16,6 @@
           label: 'General'
 
   properties:
-    linkingActivated:
-      type: boolean
-      defaultValue: true
-      ui:
-        label: 'Link words to the glossary page'
-        inspector:
-          group: general
-
     headline:
       type: string
       defaultValue: "Glossary"

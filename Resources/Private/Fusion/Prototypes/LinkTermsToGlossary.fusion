@@ -5,6 +5,14 @@
 #
 prototype(Sitegeist.Nomenclator:LinkTermsToGlossary) {
     @class = 'Sitegeist\\Nomenclator\\Fusion\\LinkTermsToGlossaryImplementation'
-    node = ${node}
+    glossaryPage = ${q(site).find('[instanceof Sitegeist.Nomenclator:Document.Glossary]').get(0)}
+    glossaryPageUri = ${this.glossaryPage}
+    glossaryPageUri.@process.getNodeUri = Neos.Neos:NodeUri {
+        node = ${value}
+    }
     value = ${value}
+
+    @if.hasGlossaryPage = ${this.glossaryPage}
+    @if.linkingIsActivated = ${q(this.glossaryPage).property('linkingActivated')}
+    @if.isNotInBackend = ${!node.context.inBackend}
 }

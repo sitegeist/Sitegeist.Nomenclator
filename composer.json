@@ -3,17 +3,32 @@
     "type": "neos-package",
     "name": "sitegeist/nomenclator",
     "require": {
-        "neos/flow": "*",
-        "sitegeist/lazybones": "^3.0"
+        "neos/neos": ">= 4.3 || dev-master",
+        "sitegeist/lazybones": "^3.0",
+        "masterminds/html5": "^2.7"
+    },
+    "config": {
+        "vendor-dir": "Packages/Libraries",
+        "bin-dir": "bin"
     },
     "autoload": {
         "psr-4": {
             "Sitegeist\\Nomenclator\\": "Classes/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Sitegeist\\Nomenclator\\Tests\\": "Tests"
+        }
+    },
     "extra": {
         "neos": {
             "package-key": "Sitegeist.Nomenclator"
         }
+    },
+    "require-dev": {
+        "neos/buildessentials": "^7.0",
+        "phpunit/phpunit": "^9.5",
+        "mikey179/vfsstream": "^1.6"
     }
 }

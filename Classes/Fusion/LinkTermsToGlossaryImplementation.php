@@ -7,6 +7,7 @@ use Neos\Neos\Service\LinkingService;
 use Sitegeist\Nomenclator\Domain\Glossary;
 use Neos\Fusion\FusionObjects\AbstractFusionObject;
 use Neos\Eel\FlowQuery\FlowQuery;
+use Sitegeist\Nomenclator\Utility\TermReplacer;
 
 class LinkTermsToGlossaryImplementation extends AbstractFusionObject
 {
@@ -36,28 +37,20 @@ class LinkTermsToGlossaryImplementation extends AbstractFusionObject
         return $resolvedUri;
     }
 
+    /**
+     * @return null|TraversableNodeInterface
+     */
+    public function getGlossaryPage(): ?TraversableNodeInterface
+    {
+        return $this->fusionValue('glossaryPage');
+    }
 
     /**
-     * Glossary page and glossary root component of the site
-     *
-     * @return array
+     * @return null|string
      */
-    public function getGlossaryNodes()
+    public function getGlossaryPageUri(): ?string
     {
-        /** @var $contentContext ContentContext */
-        $contentContext = $this->getNode()->getContext();
-
-        $site = $contentContext->getCurrentSiteNode();
-
-        $glossaryNodes = (new FlowQuery([$site]))->find('[instanceof Sitegeist.Nomenclator:Content.Glossary]')->get();
-
-        $glossaryPages = (new FlowQuery([$site]))->find('[instanceof Sitegeist.Nomenclator:Document.Glossary]')->get();
-
-        $glossary['node'] = $glossaryNodes[0];
-
-        $glossary['page'] = $glossaryPages[0];
-
-        return $glossary;
+        return $this->fusionValue('glossaryPageUri');
     }
 
     /**
@@ -70,75 +63,28 @@ class LinkTermsToGlossaryImplementation extends AbstractFusionObject
         return $this->fusionValue('value');
     }
 
-    /**
-     * the node to be processed
-     *
-     * @return TraversableNodeInterface
-     */
-    public function getNode()
-    {
-        return $this->fusionValue('node');
-    }
-
-
     public function evaluate()
     {
-        $glossary = $this->getGlossaryNodes();
-
-        $isInBackend = $this->getNode()->getContext()->isInBackend();
-
         $content = $this->getValue();
 
-        if (!$glossary['node']->getProperty('linkingActivated') || $isInBackend || !$glossary['node']) {
+        if (!($glossaryPage = $this->getGlossaryPage())) {
             return $content;
         }
 
-        $glossaryIndex = $this->glossary->readGlossaryIndexFromCache($glossary['node']);
-
-        $glossaryUri = $this->getNodeUri($glossary['page']);
-
-        $lastBracket = '';
-
-        $processedContent = "" ;
-
-        while (strlen($content)) {
-            $nextLaBracket = (strpos($content, '<') === false) ? strlen($content) - 1 : strpos($content, '<') ;
-
-            $nextRaBracket = (strpos($content, '>') === false) ? strlen($content) - 1 : strpos($content, '>') ;
-
-            $currentPosition = min($nextLaBracket, $nextRaBracket) ;
-
-            $currentBracket = $content[$currentPosition];
-
-            $buffer = substr($content, 0, ++$currentPosition);
-
-            $content = substr($content, $currentPosition);
-
-            if ($lastBracket == '<' && $currentBracket == '>') {
-                $processedContent = $processedContent . $buffer;
-            } else {
-                foreach ($glossaryIndex['terms'] as $term => $identifier) {
-                    $pattern = '/\b'.$term.'\b/i';
-
-                    $buffer = preg_replace_callback($pattern, function ($matches) use (
-                        $glossaryIndex,
-                        $identifier,
-                        $glossaryUri
-                    ) {
-                        return sprintf(
-                            '<a class="nomenclator_entry" href="%s#%s" data-identifier="%s">%s</a>',
-                            $glossaryUri,
-                            $glossaryIndex['titles'][(string)$identifier],
-                            $identifier,
-                            $matches[0]
-                        );
-                    },
-                    $buffer);
-                }
-                $processedContent = $processedContent . $buffer;
-            }
-            $lastBracket=$currentBracket;
+        if (!($glossaryPageUri = $this->getGlossaryPageuri())) {
+            return $content;
         }
-        return $processedContent;
+
+        $glossaryNode = $glossaryPage->getChildNode('main');
+        $glossaryIndex = $this->glossary->readGlossaryIndexFromCache($glossaryNode);
+
+        return TermReplacer::replaceTerms($content, $glossaryIndex->getTerms(), function (\DOMDocument $doc, string $match, string $term) use ($glossaryIndex, $glossaryPageUri) {
+            $link = $doc->createElement('a', $match);
+            $link->setAttribute('class', 'nomenclator_entry');
+            $link->setAttribute('href', $glossaryPageUri . '#' . $glossaryIndex->getTitleForTerm($term));
+            $link->setAttribute('data-identifier', (string) $glossaryIndex->getNodeIdentifierForTerm($term));
+
+            return $link;
+        });
     }
 }

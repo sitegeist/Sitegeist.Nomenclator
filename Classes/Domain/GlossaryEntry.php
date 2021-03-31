@@ -16,10 +16,19 @@ final class GlossaryEntry implements \JsonSerializable
     private $shortDescription;
 
 
-    public function __construct(string $shortDescription)
+    private function __construct(string $shortDescription)
     {
-
         $this->shortDescription = $shortDescription;
+    }
+
+    public static function fromNode(TraversableNodeInterface $node): self
+    {
+        if (!$node->getNodeType()->isOfType('Sitegeist.Nomenclator:Content.Glossary.Entry')) {
+            throw GlossaryEntryInvalid::becauseNodeIsNotOfTypeGlossaryEntry();
+        }
+
+        $shortDescription = $node->getProperty('shortDescription');
+        return new self($shortDescription);
     }
 
     /**

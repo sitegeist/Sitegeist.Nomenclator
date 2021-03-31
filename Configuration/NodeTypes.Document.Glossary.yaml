@@ -13,7 +13,13 @@
 
   childNodes:
     main:
-      type: 'Sitegeist.Nomenclator:Collection.Content.Main'
-      constraints:
-        nodeTypes:
-          'Sitegeist.Nomenclator:Content.Glossary': false
+      type: 'Sitegeist.Nomenclator:Content.Glossary'
+
+  properties:
+    linkingActivated:
+      type: boolean
+      defaultValue: true
+      ui:
+        label: 'Link words to the glossary page'
+        inspector:
+          group: general

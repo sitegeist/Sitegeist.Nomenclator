@@ -7,16 +7,16 @@ namespace Sitegeist\Nomenclator\Application\Controller;
 
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Mvc\Controller\RestController;
-use Sitegeist\Nomenclator\Domain\GlossaryEntryFactory;
 use Neos\Flow\Mvc\View\JsonView;
+use Sitegeist\Nomenclator\Domain\GlossaryEntry;
 
 class GlossaryEntryController extends RestController
 {
     /**
      * @Flow\Inject
-     * @var GlossaryEntryFactory
+     * @var ContentContextFactory
      */
-    protected $glossaryEntryFactory;
+    protected $contentContextFactory;
 
     /**
      * @var array
@@ -38,7 +38,10 @@ class GlossaryEntryController extends RestController
      */
     public function findEntryAction(string $identifier)
     {
-        $glossaryEntry = $this->glossaryEntryFactory->fromNodeIdentifier($identifier);
+        $contentContext = $this->contentContextFactory->create([]);
+        $glossaryEntryNode = $contentContext->getNodeByIdentifier($identifier);
+
+        $glossaryEntry = GlossaryEntry::fromNode($glossaryEntryNode);
         $this->view->assign('value', $glossaryEntry);
     }
 }
