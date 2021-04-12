@@ -7,13 +7,3 @@ Sitegeist\Nomenclator\Domain\Glossary:
         arguments:
           1:
             value: 'Glossary_Index_Cache'
-
-Sitegeist\Nomenclator\Command\TryCommandController:
-  properties:
-    glossaryIndexCache:
-      object:
-        factoryObjectName: Neos\Flow\Cache\CacheManager
-        factoryMethodName: getCache
-        arguments:
-          1:
-            value: 'Glossary_Index_Cache'
