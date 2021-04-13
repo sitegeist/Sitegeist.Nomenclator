@@ -34,7 +34,6 @@ final class GlossaryIndex
     {
         $nodeIdentifier = $this->getNodeIdentifierForTerm($term);
         return $this->entries['titles'][(string)$nodeIdentifier];
-
     }
 
     public function getNodeIdentifierForTerm(string $term): NodeAggregateIdentifier

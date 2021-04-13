@@ -1,61 +1,61 @@
 document.addEventListener('DOMContentLoaded', function() {
 	const entryTargets = Array.from(document.getElementsByClassName('nomenclator_entry'));
+
+	const handleEntryClick = (event) => {
+		event.preventDefault();
+
+		event.stopPropagation();
+
+		removeModal();
+
+		let entryModal = document.createElement('div');
+
+		entryModal.id = 'entry-modal';
+
+		let currentTarget = event.currentTarget;
+
+		let currentHref = event.currentTarget.getAttribute('href');
+
+		getDesciption(event.currentTarget.dataset.identifier).then((data) => {
+
+			entryModal.innerHTML = `${data.shortDescription} <a class='modal-link' href=${currentHref} target='_blank'>&#10143;</a>`;
+
+			document.body.appendChild(entryModal);
+
+			var modalDimension = {
+				width : entryModal.clientWidth,
+				height : entryModal.clientHeight
+			}
+
+			let position = getPosition(currentTarget , modalDimension);
+
+			entryModal.style.left = `${position.x}px`;
+			entryModal.style.top = `${position.y}px`;
+		});
+	}
+
 	entryTargets.forEach((entryTarget) => {
 		entryTarget.addEventListener('click', handleEntryClick, false);
 	});
-});
 
+	document.body.addEventListener('click', () => {
+		removeModal();
+	}, true);
 
-
-const handleEntryClick = (event) => {
-	event.preventDefault();
-	event.stopPropagation();
-	removeModal();
-
-	let entryModal = document.createElement('div');
-
-	entryModal.id = 'entry-modal';
-
-	let currentTarget = event.currentTarget;
-
-	let currentHref = event.currentTarget.getAttribute('href');
-
-	getDesciption(event.currentTarget.dataset.identifier).then((data) => {
-
-		entryModal.innerHTML = `${data.shortDescription} <a class='modal-link' href=${currentHref} target='_blank'>&#10143;</a>`;
-
-		document.body.appendChild(entryModal);
-
-		var modalDimension = {
-			width : entryModal.clientWidth,
-			height : entryModal.clientHeight
-		}
-
-		let position = getPosition(currentTarget , modalDimension);
-
-		entryModal.style.left = `${position.x}px`;
-		entryModal.style.top = `${position.y}px`;
+	window.addEventListener("resize", () => {
+		removeModal();
 	});
 
-}
-
-document.body.addEventListener('click', () => {
-	removeModal();
-}, true);
-
-window.addEventListener("resize", () => {
-	removeModal();
-});
-
-document.addEventListener('keydown', function(e) {
-	if (e.key === 'Escape') {
-		removeModal();
-	}
+	document.addEventListener('keydown', function(e) {
+		if (e.key === 'Escape') {
+			removeModal();
+		}
+	});
 });
 
 async function getDesciption(nodeIdentifier) {
 
-	const response = await fetch('./glossary/entry/'+ nodeIdentifier , {
+	const response = await fetch('/glossary/entry/'+ nodeIdentifier , {
 		method: 'get',
 
 		headers: {
@@ -150,6 +150,3 @@ function getPosition(elem, modalDimension) {
 		}
 	}
 }
-
-
-

@@ -5,7 +5,6 @@ use Neos\ContentRepository\Domain\NodeType\NodeTypeConstraints;
 use Neos\Flow\Annotations as Flow;
 use Neos\ContentRepository\Domain\Projection\Content\TraversableNodeInterface;
 
-
 final class GlossaryIndexFactory
 {
     /**

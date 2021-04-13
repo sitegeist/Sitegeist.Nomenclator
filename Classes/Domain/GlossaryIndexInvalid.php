@@ -23,4 +23,3 @@ final class GlossaryIndexInvalid extends \DomainException
         return new self('Instead of a Glossary node type a '. $node->getNodeType()->getName() .' was given ', 1617189820);
     }
 }
-

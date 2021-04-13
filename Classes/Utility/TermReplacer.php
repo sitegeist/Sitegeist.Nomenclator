@@ -14,39 +14,39 @@ final class TermReplacer
     public static function replaceTerms(string $markup, array $terms, callable $onReplaceTerm): string
     {
         $html5 = new HTML5();
+
         $doc = $html5->loadHTML(sprintf('<div>%s</div>', $markup));
 
         $xpath = new \DOMXPath($doc);
-        // Namespace needs to be registered due to limitations in Masterminds\HTML5
-        // see: https://github.com/Masterminds/html5-php/issues/57
+
         $xpath->registerNamespace('html', 'http://www.w3.org/1999/xhtml');
 
-        // The XPath Query selects all text nodes that are not
-        // descendants of links
         $nodes = $xpath->query('//text()[not(ancestor::html:a) and not(ancestor::html:script)]');
+
         foreach ($nodes as $node) {
-            foreach ($terms as $term) {
-                // Regex left out for simplicity's sake
-                $matches = preg_split('/(\b' . preg_quote($term) . '\b)/i', $node->nodeValue, -1, PREG_SPLIT_DELIM_CAPTURE);
+            $fragment = $doc->createDocumentFragment();
 
-                if (count($matches) > 1) {
-                    $fragment = $doc->createDocumentFragment();
+            $matches = preg_split('/(\b(?:' . join('|', array_map('preg_quote', $terms)) . ')\b)/i', $node->nodeValue, -1, PREG_SPLIT_DELIM_CAPTURE);
 
-                    foreach ($matches as $match) {
-                        if (\mb_strtolower($match) === \mb_strtolower($term)) {
-                            $link = $onReplaceTerm($doc, $match, $term);
-                            $fragment->appendChild($link);
-                        } else {
-                            $text = $doc->createTextNode($match);
-                            $fragment->appendChild($text);
-                        }
+            if (count($matches) > 1) {
+                foreach ($matches as $match) {
+                    if ($matchingTerms = preg_grep('/\b' . preg_quote($match) . '\b/i', $terms)) {
+                        $matchingTerms = array_values($matchingTerms);
+
+                        $link = $onReplaceTerm($doc, $match, $matchingTerms[0]);
+
+                        $fragment->appendChild($link);
+                    } else {
+                        $text = $doc->createTextNode($match);
+                        $fragment->appendChild($text);
                     }
-
-                    $node->parentNode->replaceChild($fragment, $node);
                 }
             }
-        }
 
+            if (count($fragment->childNodes) > 0) {
+                $node->parentNode->replaceChild($fragment, $node);
+            }
+        }
         return $html5->saveHTML($doc->childNodes[1]->childNodes[0]->childNodes);
     }
 }
