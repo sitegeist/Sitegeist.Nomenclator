@@ -13,6 +13,9 @@ After adding a term to the glossary its appearance in all binded contents gets l
 by our employer http://www.sitegeist.de.*
 
 ## Installation
+
+Sitegeist.Nomenclator is available via packagist. `composer require sitegeist/nomenclator`
+
 ## Usage
 ### Glossary Page as a Nodetype
 After the installation of the package, the glossary page will be available as a 'Sitegeist.Nomenclator:Content.Glossary' nodetype. Every site must contain only one single glossary page. As a best practice, it is recommended to add the 'Sitegeist.Nomenclator:Content.Glossary' as an auto-created child node in the homepage and prevent the page from being created by editor.
